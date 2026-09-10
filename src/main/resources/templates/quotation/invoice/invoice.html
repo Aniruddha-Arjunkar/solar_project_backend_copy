@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>GST Invoice</title>
+    <style>
+
+        @page {
+            size: A4;
+            margin: 30px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            color: #222;
+            margin: 0;
+            padding: 0;
+        }
+
+        .invoice-container {
+            width: 100%;
+        }
+
+        /* ============================================================
+           HEADER
+        ============================================================ */
+
+        .header {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .company-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .company-details {
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .invoice-title {
+            text-align: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        /* ============================================================
+           CUSTOMER + INVOICE INFORMATION
+        ============================================================ */
+
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .info-table td {
+            vertical-align: top;
+            padding: 8px;
+            border: 1px solid #ccc;
+        }
+
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .customer-details {
+            line-height: 1.6;
+        }
+
+        .invoice-details {
+            line-height: 1.8;
+        }
+
+        /* ============================================================
+           ITEMS TABLE
+        ============================================================ */
+
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .items-table th {
+            background-color: #eeeeee;
+            border: 1px solid #999;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .items-table td {
+            border: 1px solid #999;
+            padding: 8px;
+        }
+
+        .text-left {
+            text-align: left;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        /* ============================================================
+           TOTALS
+        ============================================================ */
+
+        .totals-table {
+            width: 45%;
+            margin-left: auto;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        .totals-table td {
+            border: 1px solid #ccc;
+            padding: 8px;
+        }
+
+        .grand-total {
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        /* ============================================================
+           NOTES
+        ============================================================ */
+
+        .notes {
+            margin-top: 30px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        .notes-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        /* ============================================================
+           FOOTER
+        ============================================================ */
+
+        .footer {
+            margin-top: 40px;
+            font-size: 10px;
+            text-align: center;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="invoice-container">
+
+    <!-- ============================================================
+         COMPANY HEADER
+    ============================================================ -->
+
+    <table class="header">
+
+        <tr>
+
+            <td style="width: 60%; border: none;">
+
+                <div class="company-name">
+                    Shul Ventures
+                </div>
+
+                <div class="company-details">
+                    Solar Services<br />
+                    Pune, Maharashtra<br />
+                    India
+                </div>
+
+            </td>
+
+            <td style="width: 40%; border: none;">
+
+                <div class="invoice-title">
+                    TAX INVOICE
+                </div>
+
+            </td>
+
+        </tr>
+
+    </table>
+
+
+    <!-- ============================================================
+         CUSTOMER + INVOICE DETAILS
+    ============================================================ -->
+
+    <table class="info-table">
+
+        <tr>
+
+            <!-- CUSTOMER -->
+
+            <td style="width: 55%;">
+
+                <div class="section-title">
+                    Bill To
+                </div>
+
+                <div class="customer-details">
+
+                    <strong th:text="${invoice.custName}">
+                        Customer Name
+                    </strong>
+
+                    <br/>
+
+                    Phone:
+                    <span th:text="${invoice.custPhone}">
+                        Phone
+                    </span>
+
+                    <br/>
+
+                    Email:
+                    <span th:text="${invoice.custEmail}">
+                        Email
+                    </span>
+
+                    <br/>
+
+                    Billing Address:
+                    <span th:text="${invoice.billingAddress}">
+                        Billing Address
+                    </span>
+
+                    <br/>
+
+                    Shipping Address:
+                    <span th:text="${invoice.shippingAddress}">
+                        Shipping Address
+                    </span>
+
+                </div>
+
+            </td>
+
+
+            <!-- INVOICE DETAILS -->
+
+            <td style="width: 45%;">
+
+                <div class="section-title">
+                    Invoice Details
+                </div>
+
+                <div class="invoice-details">
+
+                    Invoice No:
+                    <strong th:text="${invoice.gstInvoiceNo}">
+                        GST-INV-000
+                    </strong>
+
+                    <br/>
+
+                    Invoice Date:
+                    <span th:text="${invoice.invoiceDate}">
+                        2026-01-01
+                    </span>
+
+                    <br/>
+
+                    Due Date:
+                    <span th:text="${invoice.dueDate}">
+                        2026-01-15
+                    </span>
+
+                    <br/>
+
+                    Inquiry ID:
+                    <span th:text="${invoice.inquiryId}">
+                        0
+                    </span>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+    </table>
+
+
+    <!-- ============================================================
+         INVOICE ITEMS
+    ============================================================ -->
+
+    <table class="items-table">
+
+        <thead>
+
+        <tr>
+
+            <th style="width: 5%;">
+                #
+            </th>
+
+            <th style="width: 25%;">
+                Item / Service
+            </th>
+
+            <th style="width: 12%;">
+                HSN
+            </th>
+
+            <th style="width: 8%;">
+                Qty
+            </th>
+
+            <th style="width: 12%;">
+                Rate
+            </th>
+
+            <th style="width: 10%;">
+                CGST
+            </th>
+
+            <th style="width: 10%;">
+                SGST
+            </th>
+
+            <th style="width: 18%;">
+                Total
+            </th>
+
+        </tr>
+
+        </thead>
+
+
+        <tbody>
+
+        <tr th:each="item, itemStat : ${invoice.items}">
+
+            <td class="text-center"
+                th:text="${itemStat.count}">
+                1
+            </td>
+
+            <td class="text-left"
+                th:text="${item.itemName}">
+                Solar Panel Installation
+            </td>
+
+            <td class="text-center"
+                th:text="${item.hsn}">
+                85414011
+            </td>
+
+            <td class="text-center"
+                th:text="${item.qty}">
+                1
+            </td>
+
+            <td class="text-right"
+                th:text="${item.rate}">
+                100000.00
+            </td>
+
+            <td class="text-right">
+
+                <span th:text="${item.cgstPer}">
+                    9
+                </span>
+                %
+
+                <br />
+
+                <span th:text="${item.cgstAmt}">
+                    9000.00
+                </span>
+
+            </td>
+
+            <td class="text-right">
+
+                <span th:text="${item.sgstPer}">
+                    9
+                </span>
+                %
+
+                <br/>
+
+                <span th:text="${item.sgstAmt}">
+                    9000.00
+                </span>
+
+            </td>
+
+            <td class="text-right"
+                th:text="${item.itemTotal}">
+                118000.00
+            </td>
+
+        </tr>
+
+        </tbody>
+
+    </table>
+
+
+    <!-- ============================================================
+         TOTALS
+    ============================================================ -->
+
+    <table class="totals-table">
+
+        <tr>
+
+            <td>
+                Subtotal
+            </td>
+
+            <td class="text-right"
+                th:text="${invoice.subtotal}">
+                100000.00
+            </td>
+
+        </tr>
+
+
+        <tr>
+
+            <td>
+                Total CGST
+            </td>
+
+            <td class="text-right"
+                th:text="${invoice.totalCgst}">
+                9000.00
+            </td>
+
+        </tr>
+
+
+        <tr>
+
+            <td>
+                Total SGST
+            </td>
+
+            <td class="text-right"
+                th:text="${invoice.totalSgst}">
+                9000.00
+            </td>
+
+        </tr>
+
+
+        <tr class="grand-total">
+
+            <td>
+                Grand Total
+            </td>
+
+            <td class="text-right"
+                th:text="${invoice.grandTotal}">
+                118000.00
+            </td>
+
+        </tr>
+
+    </table>
+
+
+    <!-- ============================================================
+         NOTES
+    ============================================================ -->
+
+    <div class="notes"
+         th:if="${invoice.notes != null and !#strings.isEmpty(invoice.notes)}">
+
+        <div class="notes-title">
+            Notes
+        </div>
+
+        <div th:text="${invoice.notes}">
+            Invoice notes
+        </div>
+
+    </div>
+
+
+    <!-- ============================================================
+         FOOTER
+    ============================================================ -->
+
+    <div class="footer">
+
+        <p>
+            Thank you for choosing Shul Ventures.
+        </p>
+
+        <p>
+            This is a computer-generated invoice and does not require a signature.
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
