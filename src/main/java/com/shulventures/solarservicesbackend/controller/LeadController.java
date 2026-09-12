@@ -134,9 +134,7 @@ public class LeadController {
             @PathVariable Long id,
             @RequestBody Lead followUpData
     ) {
-
         Lead updatedLead = leadService.reFollowUpLead(id, followUpData);
-
         return ResponseEntity.ok(updatedLead);
     }
 
