@@ -201,7 +201,7 @@ public class LeadService {
 
         lead.setQuotationDate(quotationData.getQuotationDate());
         lead.setRemarks(quotationData.getRemarks());
-        lead.setStatus("QUOTATION");
+//        lead.setStatus("QUOTATION");
 
         return leadRepository.save(lead);
     }
@@ -209,7 +209,11 @@ public class LeadService {
     // ================= GET QUOTATION LEADS =================
 
     public List<Lead> getQuotationLeads() {
-        return leadRepository.findByStatus("QUOTATION");
+        return leadRepository.findByQuotationStatusIsNotNull();
     }
+
+   // public List<Lead> getQuotationLeads() {
+   //     return leadRepository.findByStatus("QUOTATION");
+   // }
 
 }

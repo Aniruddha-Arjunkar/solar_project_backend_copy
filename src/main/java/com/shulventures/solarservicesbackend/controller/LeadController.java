@@ -17,9 +17,6 @@ public class LeadController {
 
     private final LeadService leadService;
 
-
-
-
     public LeadController(LeadService leadService) {
         this.leadService = leadService;
     }
@@ -47,7 +44,6 @@ public class LeadController {
     public ResponseEntity<List<Lead>> getAllLeads() {
 
         List<Lead> leads = leadService.getAllLeads();
-
         return ResponseEntity.ok(leads);
     }
 

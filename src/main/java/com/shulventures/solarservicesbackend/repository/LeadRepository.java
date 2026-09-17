@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface LeadRepository extends JpaRepository<Lead, Long> {
     List<Lead> findByStatus(String status);
+
+    List<Lead> findByQuotationStatusIsNotNull();
 }

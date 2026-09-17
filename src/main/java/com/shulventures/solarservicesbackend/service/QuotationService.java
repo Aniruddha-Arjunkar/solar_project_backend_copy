@@ -42,16 +42,14 @@ public class QuotationService {
         if (quotation.getItems() != null) {
 
             for (QuotationItem item : quotation.getItems()) {
-
                 item.setQuotation(quotation);
             }
         }
 
-
         // Update lead quotation status
         lead.setQuotationDate(quotation.getQuotationDate());
         lead.setQuotationStatus("DRAFT");
-        lead.setStatus("QUOTATION");
+//        lead.setStatus("QUOTATION");
 
         leadRepository.save(lead);
 
