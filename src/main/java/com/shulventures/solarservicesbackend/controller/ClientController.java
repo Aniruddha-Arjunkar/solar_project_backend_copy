@@ -158,6 +158,25 @@ public class ClientController {
         return ResponseEntity.ok(client);
     }
 
+    // ================ CONVERT LEAD INTO CLIENT VIA VENDOR ==================
+
+    @PostMapping("/convert-from-lead/{leadId}/vendor/{vendorId}")
+    public ResponseEntity<Client> convertLeadToVendorClient(
+            @PathVariable Long leadId,
+            @PathVariable Long vendorId,
+            @RequestBody Client clientData
+    ) {
+
+        Client client =
+                clientService.convertLeadToVendorClient(
+                        leadId,
+                        vendorId,
+                        clientData
+                );
+
+        return ResponseEntity.ok(client);
+    }
+
     // ==================== CREATE CLIENT FROM VENDOR ====================
     @PostMapping("/vendor/{vendorId}")
     public ResponseEntity<Client> createVendorClient(

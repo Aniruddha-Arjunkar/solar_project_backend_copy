@@ -1,5 +1,6 @@
 package com.shulventures.solarservicesbackend.service;
 
+import com.shulventures.solarservicesbackend.service.VendorService;
 import com.shulventures.solarservicesbackend.entity.Client;
 import com.shulventures.solarservicesbackend.entity.Lead;
 import com.shulventures.solarservicesbackend.repository.ClientRepository;
@@ -19,14 +20,17 @@ public class ClientService {
     private final ClientRepository clientRepository;
     private final LeadRepository leadRepository;
     private final QuotationRepository quotationRepository;
+    private final VendorService vendorService;
 
 
     public ClientService(ClientRepository clientRepository,
                          LeadRepository leadRepository,
-                         QuotationRepository quotationRepository) {
+                         QuotationRepository quotationRepository,
+                         VendorService vendorService) {
         this.clientRepository = clientRepository;
         this.leadRepository = leadRepository;
         this.quotationRepository = quotationRepository;
+        this.vendorService = vendorService;
     }
 
 
@@ -508,6 +512,209 @@ public class ClientService {
         leadRepository.delete(lead);
 
         // RETURN CREATED CLIENT
+        return savedClient;
+    }
+
+    // ==================== CONVERT SCHEDULED LEAD INTO CLIENT VIA VENDOR ====================
+
+    @Transactional
+    public Client convertLeadToVendorClient(
+            Long leadId,
+            Long vendorId,
+            Client clientData
+    ) {
+
+
+        // FIND LEAD
+        Lead lead = leadRepository.findById(leadId)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Lead not found with id: " + leadId
+                        )
+                );
+
+
+
+        // VALIDATE LEAD STATUS
+        if (!"SCHEDULED".equalsIgnoreCase(lead.getStatus())) {
+
+            throw new RuntimeException(
+                    "Only scheduled leads can be converted into clients."
+            );
+        }
+
+
+        // VALIDATE VENDOR
+        vendorService.getVendorById(vendorId)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Vendor not found with id: " + vendorId
+                        )
+                );
+
+        // CREATE CLIENT
+        Client client = new Client();
+
+
+        // LEAD REFERENCE
+        client.setInquiryId(lead.getId());
+
+
+        // CUSTOMER INFORMATION FROM LEAD
+        client.setCustName(lead.getName());
+        client.setCustPhone(lead.getContact());
+        client.setCustEmail(lead.getEmail());
+        client.setCustAddress(lead.getAddress());
+
+
+        // SERVICE INFORMATION
+        client.setService(lead.getServiceType());
+        client.setServiceDate(lead.getScheduleDate());
+        client.setServiceCovered(
+                lead.getServiceRequirement()
+        );
+
+
+        // ADDITIONAL DATA FROM MAKE CLIENT FORM
+        if (clientData.getService() != null &&
+                !clientData.getService().isBlank()) {
+
+            client.setService(
+                    clientData.getService()
+            );
+        }
+
+        if (clientData.getServiceTermCondition() != null) {
+
+            client.setServiceTermCondition(
+                    clientData.getServiceTermCondition()
+            );
+        }
+
+        if (clientData.getWarranty() != null) {
+
+            client.setWarranty(
+                    clientData.getWarranty()
+            );
+        }
+
+        if (clientData.getServiceCovered() != null) {
+
+            client.setServiceCovered(
+                    clientData.getServiceCovered()
+            );
+        }
+
+        if (clientData.getServiceDate() != null) {
+
+            client.setServiceDate(
+                    clientData.getServiceDate()
+            );
+        }
+
+
+        // AMOUNT
+        client.setTotalAmount(
+                clientData.getTotalAmount()
+        );
+
+
+        // GST INFORMATION
+        client.setApplyGst(
+                clientData.getApplyGst()
+        );
+
+        client.setGstType(
+                clientData.getGstType()
+        );
+
+        client.setGstInvoiceNo(
+                clientData.getGstInvoiceNo()
+        );
+
+
+        // ADDRESS INFORMATION
+        client.setBillingAddress(
+                clientData.getBillingAddress()
+        );
+
+        client.setShippingAddress(
+                clientData.getShippingAddress()
+        );
+
+
+        // OTHER CLIENT INFORMATION
+        client.setDocuments(
+                clientData.getDocuments()
+        );
+
+        client.setConsumerNo(
+                clientData.getConsumerNo()
+        );
+
+        client.setSubdivision(
+                clientData.getSubdivision()
+        );
+
+        client.setTechnicalName(
+                clientData.getTechnicalName()
+        );
+
+
+
+        // SOURCE INFORMATION
+        client.setAddedBy("VENDOR");
+        client.setVendorId(vendorId);
+
+
+
+        // GST CALCULATION
+        BigDecimal baseAmount =
+                client.getTotalAmount();
+
+        if (baseAmount == null) {
+            baseAmount = BigDecimal.ZERO;
+            client.setTotalAmount(baseAmount);
+        }
+
+
+        if (Boolean.TRUE.equals(client.getApplyGst())) {
+
+            BigDecimal gstAmount =
+                    baseAmount.multiply(
+                            new BigDecimal("0.18")
+                    );
+
+            client.setGstAmount(gstAmount);
+
+            client.setFinalAmount(
+                    baseAmount.add(gstAmount)
+            );
+
+        } else {
+
+            client.setGstAmount(
+                    BigDecimal.ZERO
+            );
+
+            client.setFinalAmount(
+                    baseAmount
+            );
+        }
+
+
+        // SAVE CLIENT
+        Client savedClient = clientRepository.save(client);
+
+
+        // DELETE QUOTATIONS FIRST
+        quotationRepository.deleteByLeadId(leadId);
+
+
+        // DELETE ORIGINAL LEAD
+        leadRepository.delete(lead);
+
+        // RETURN CLIENT
         return savedClient;
     }
 
