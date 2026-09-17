@@ -21,17 +21,17 @@ public class Quotation {
 
     // ================= QUOTATION INFO =================
 
-    private String quotationNo;
+      //private String quotationNo;
+      @Column(unique = true)
+      private String quotationNo;
 
-    private LocalDate quotationDate;
+      private LocalDate quotationDate;
 
 
     // ================= CLIENT DETAILS =================
 
     private String clientName;
-
     private String clientPhone;
-
     @Column(columnDefinition = "TEXT")
     private String clientAddress;
 
@@ -44,39 +44,26 @@ public class Quotation {
     // ================= SUMMARY OF PROPOSAL =================
 
     private BigDecimal pvPlantSize;
-
     private Boolean gstIncluded;
-
     private String systemType;
-
     private BigDecimal powerGenerationMonth;
-
     private BigDecimal powerGenerationYear;
-
     private BigDecimal totalSystemCost;
-
     private BigDecimal minAnnualSaving;
-
     private BigDecimal investmentRecoveryYears;
 
 
     // ================= COMMERCIAL =================
 
     private BigDecimal supplyInstallation;
-
     private BigDecimal commercialTotal;
-
     private BigDecimal actualProjectCost;
-
     private BigDecimal gstAmount;
-
     private BigDecimal govtSubsidy;
-
 
     // ================= STATUS =================
 
     private String status;
-
 
     // ================= LEAD RELATION =================
 

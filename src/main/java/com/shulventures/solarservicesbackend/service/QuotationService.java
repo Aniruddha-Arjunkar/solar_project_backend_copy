@@ -54,7 +54,23 @@ public class QuotationService {
         leadRepository.save(lead);
 
         // Save quotation + items
-        return quotationRepository.save(quotation);
+        // return quotationRepository.save(quotation);
+
+        // Save quotation + items
+        Quotation savedQuotation =
+                quotationRepository.save(quotation);
+
+         // Generate automatic quotation reference number
+        String quotationNo =
+                String.format("QT-%03d",
+                        savedQuotation.getId()
+                );
+
+        savedQuotation.setQuotationNo(quotationNo);
+
+// Save quotation again with generated quotation number
+        return quotationRepository.save(savedQuotation);
+
     }
 
     // ================= GET all Quotations =================
