@@ -4,8 +4,10 @@ import com.shulventures.solarservicesbackend.entity.Client;
 import com.shulventures.solarservicesbackend.entity.Lead;
 import com.shulventures.solarservicesbackend.repository.ClientRepository;
 import com.shulventures.solarservicesbackend.repository.LeadRepository;
+import com.shulventures.solarservicesbackend.repository.QuotationRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -16,12 +18,15 @@ public class ClientService {
 
     private final ClientRepository clientRepository;
     private final LeadRepository leadRepository;
+    private final QuotationRepository quotationRepository;
 
 
     public ClientService(ClientRepository clientRepository,
-                         LeadRepository leadRepository) {
+                         LeadRepository leadRepository,
+                         QuotationRepository quotationRepository) {
         this.clientRepository = clientRepository;
         this.leadRepository = leadRepository;
+        this.quotationRepository = quotationRepository;
     }
 
 
@@ -495,6 +500,9 @@ public class ClientService {
 
         // SAVE CLIENT
         Client savedClient = clientRepository.save(client);
+
+        // DELETE QUOTATIONS FIRST
+        quotationRepository.deleteByLeadId(leadId);
 
         // DELETE ORIGINAL LEAD
         leadRepository.delete(lead);
