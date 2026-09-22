@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.math.RoundingMode;
 import java.util.Optional;
 
 @Service
@@ -33,6 +34,155 @@ public class ClientService {
         this.vendorService = vendorService;
     }
 
+    // =======  GST CALCULATION ===============================
+
+    private void calculateGstAmounts(Client client) {
+
+        // --------------------------------------------------------
+        // DEFAULT GST VALUES
+        // --------------------------------------------------------
+
+        if (client.getApplyGst() == null) {
+            client.setApplyGst(false);
+        }
+
+        if (client.getGstType() == null ||
+                client.getGstType().isBlank()) {
+
+            client.setGstType("exclusive");
+        }
+
+
+        // --------------------------------------------------------
+        // TOTAL AMOUNT
+        // --------------------------------------------------------
+
+        BigDecimal totalAmount =
+                client.getTotalAmount();
+
+        if (totalAmount == null) {
+
+            totalAmount = BigDecimal.ZERO;
+
+            client.setTotalAmount(totalAmount);
+        }
+
+
+        // --------------------------------------------------------
+        // NON-GST CLIENT
+        // --------------------------------------------------------
+
+        if (!Boolean.TRUE.equals(client.getApplyGst())) {
+
+            client.setGstAmount(
+                    BigDecimal.ZERO
+            );
+
+            client.setFinalAmount(
+                    totalAmount
+            );
+
+            return;
+        }
+
+
+        // --------------------------------------------------------
+        // 18% GST
+        // --------------------------------------------------------
+
+        BigDecimal gstRate =
+                new BigDecimal("0.18");
+
+
+        // ========================================================
+        // EXCLUSIVE GST
+        // Total Amount does NOT contain GST
+        // ========================================================
+
+        if ("exclusive".equalsIgnoreCase(
+                client.getGstType()
+        )) {
+
+            BigDecimal gstAmount =
+                    totalAmount.multiply(gstRate);
+
+            client.setGstAmount(
+                    gstAmount.setScale(
+                            2,
+                            RoundingMode.HALF_UP
+                    )
+            );
+
+            client.setFinalAmount(
+                    totalAmount
+                            .add(gstAmount)
+                            .setScale(
+                                    2,
+                                    RoundingMode.HALF_UP
+                            )
+            );
+
+            return;
+        }
+
+
+        // ========================================================
+        // INCLUSIVE GST
+        // Total Amount already contains GST
+        // ========================================================
+
+        if ("inclusive".equalsIgnoreCase(
+                client.getGstType()
+        )) {
+
+            BigDecimal gstAmount =
+                    totalAmount
+                            .multiply(gstRate)
+                            .divide(
+                                    new BigDecimal("1.18"),
+                                    2,
+                                    RoundingMode.HALF_UP
+                            );
+
+            client.setGstAmount(
+                    gstAmount
+            );
+
+            client.setFinalAmount(
+                    totalAmount.setScale(
+                            2,
+                            RoundingMode.HALF_UP
+                    )
+            );
+
+            return;
+        }
+
+
+        // ========================================================
+        // UNKNOWN GST TYPE
+        // Keep current behavior as EXCLUSIVE
+        // ========================================================
+
+        BigDecimal gstAmount =
+                totalAmount.multiply(gstRate);
+
+        client.setGstAmount(
+                gstAmount.setScale(
+                        2,
+                        RoundingMode.HALF_UP
+                )
+        );
+
+        client.setFinalAmount(
+                totalAmount
+                        .add(gstAmount)
+                        .setScale(
+                                2,
+                                RoundingMode.HALF_UP
+                        )
+        );
+    }
 
     // ==================== CREATE CLIENT ====================
 
@@ -47,34 +197,7 @@ public class ClientService {
         }
 
         // ==================== GST CALCULATION ====================
-
-        BigDecimal baseAmount = client.getTotalAmount();
-
-        if (baseAmount == null) {
-            baseAmount = BigDecimal.ZERO;
-            client.setTotalAmount(baseAmount);
-        }
-
-        if (Boolean.TRUE.equals(client.getApplyGst())) {
-
-            // 18% GST
-            BigDecimal gstAmount = baseAmount
-                    .multiply(new BigDecimal("0.18"));
-
-            client.setGstAmount(gstAmount);
-
-            // Base + GST
-            client.setFinalAmount(
-                    baseAmount.add(gstAmount)
-            );
-
-        } else {
-
-            // Non-GST Client
-            client.setGstAmount(BigDecimal.ZERO);
-
-            client.setFinalAmount(baseAmount);
-        }
+        calculateGstAmounts(client);
 
         return clientRepository.save(client);
     }
@@ -227,63 +350,11 @@ public class ClientService {
         );
 
 
-        //====================================================
         // GST CALCULATION
-        //
-        // Example:
-        //
-        // Total Amount = 250000
-        //
-        // GST 18%:
-        // 250000 × 0.18 = 45000
-        //
-        // Final Amount:
-        // 250000 + 45000 = 295000
-        //
-        // IMPORTANT:
-        // GST amount and final amount are calculated
-        // by backend. We do NOT trust frontend values.
-        //====================================================
-
-        if (Boolean.TRUE.equals(applyGst)) {
-
-            BigDecimal gstAmount =
-                    baseAmount.multiply(
-                            new BigDecimal("0.18")
-                    );
-
-            BigDecimal finalAmount =
-                    baseAmount.add(gstAmount);
+        calculateGstAmounts(existingClient);
 
 
-            existingClient.setGstAmount(
-                    gstAmount
-            );
-
-            existingClient.setFinalAmount(
-                    finalAmount
-            );
-
-        } else {
-
-            //================================================
-            // GST NOT APPLIED
-            //================================================
-
-            existingClient.setGstAmount(
-                    BigDecimal.ZERO
-            );
-
-            existingClient.setFinalAmount(
-                    baseAmount
-            );
-        }
-
-
-        //====================================================
         // ADDRESS INFORMATION
-        //====================================================
-
         existingClient.setBillingAddress(
                 updatedClient.getBillingAddress()
         );
@@ -475,32 +546,9 @@ public class ClientService {
 
         client.setAddedBy("ADMIN");
 
-        //================================================
-        // GST CALCULATION
-        //
-        // Example:
-        //
-        // Total Amount = 100000
-        // GST 18%      = 18000
-        // Final Amount = 118000
-        //================================================
-        BigDecimal baseAmount = client.getTotalAmount();
 
-        if (baseAmount == null) {
-            baseAmount = BigDecimal.ZERO;
-            client.setTotalAmount(baseAmount);
-        }
-        if (Boolean.TRUE.equals(client.getApplyGst())) {
-            BigDecimal gstAmount =
-                    baseAmount.multiply(new BigDecimal("0.18"));
-            client.setGstAmount(gstAmount);
-            client.setFinalAmount(
-                    baseAmount.add(gstAmount)
-            );
-        } else {
-            client.setGstAmount(BigDecimal.ZERO);
-            client.setFinalAmount(baseAmount);
-        }
+        // GST CALCULATION
+        calculateGstAmounts(client);
 
         // SAVE CLIENT
         Client savedClient = clientRepository.save(client);
@@ -669,38 +717,7 @@ public class ClientService {
 
 
         // GST CALCULATION
-        BigDecimal baseAmount =
-                client.getTotalAmount();
-
-        if (baseAmount == null) {
-            baseAmount = BigDecimal.ZERO;
-            client.setTotalAmount(baseAmount);
-        }
-
-
-        if (Boolean.TRUE.equals(client.getApplyGst())) {
-
-            BigDecimal gstAmount =
-                    baseAmount.multiply(
-                            new BigDecimal("0.18")
-                    );
-
-            client.setGstAmount(gstAmount);
-
-            client.setFinalAmount(
-                    baseAmount.add(gstAmount)
-            );
-
-        } else {
-
-            client.setGstAmount(
-                    BigDecimal.ZERO
-            );
-
-            client.setFinalAmount(
-                    baseAmount
-            );
-        }
+        calculateGstAmounts(client);
 
 
         // SAVE CLIENT
@@ -767,35 +784,7 @@ public class ClientService {
         // GST CALCULATION
         // ====================================================
 
-        if (Boolean.TRUE.equals(client.getApplyGst())) {
-
-            // 18% GST
-            BigDecimal gstAmount =
-                    baseAmount.multiply(
-                            new BigDecimal("0.18")
-                    );
-
-            client.setGstAmount(gstAmount);
-
-            // Base Amount + GST
-            client.setFinalAmount(
-                    baseAmount.add(gstAmount)
-            );
-
-        } else {
-
-            // =================================================
-            // NON-GST CLIENT
-            // =================================================
-
-            client.setGstAmount(
-                    BigDecimal.ZERO
-            );
-
-            client.setFinalAmount(
-                    baseAmount
-            );
-        }
+        calculateGstAmounts(client);
 
         // SAVE CLIENT
         return clientRepository.save(client);

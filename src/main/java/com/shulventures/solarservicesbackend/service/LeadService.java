@@ -40,7 +40,6 @@ public class LeadService {
     // ================= GET ALL =================
 
     public List<Lead> getAllLeads() {
-
         return leadRepository.findAll();
     }
 
@@ -48,14 +47,12 @@ public class LeadService {
     // ================= GET BY ID =================
 
     public Optional<Lead> getLeadById(Long id) {
-
         return leadRepository.findById(id);
     }
 
     // ================= GET LEADS BY STATUS =================
 
     public List<Lead> getLeadsByStatus(String status) {
-
         return leadRepository.findByStatus(status);
     }
 

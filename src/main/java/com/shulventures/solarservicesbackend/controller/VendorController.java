@@ -25,10 +25,7 @@ public class VendorController {
     }
 
 
-    // ============================================================
     // CREATE VENDOR
-    // ============================================================
-
     @PostMapping
     public ResponseEntity<Vendor> createVendor(
             @RequestBody Vendor vendor
@@ -42,10 +39,7 @@ public class VendorController {
     }
 
 
-    // ============================================================
     // GET ALL VENDORS
-    // ============================================================
-
     @GetMapping
     public ResponseEntity<List<Vendor>> getAllVendors() {
         return ResponseEntity.ok(
@@ -54,10 +48,8 @@ public class VendorController {
     }
 
 
-    // ============================================================
-    // GET VENDOR BY ID
-    // ============================================================
 
+    // GET VENDOR BY ID
     @GetMapping("/{id}")
     public ResponseEntity<Vendor> getVendorById(
             @PathVariable Long id
@@ -73,10 +65,7 @@ public class VendorController {
     }
 
 
-    // ============================================================
     // UPDATE VENDOR
-    // ============================================================
-
     @PutMapping("/{id}")
     public ResponseEntity<Vendor> updateVendor(
             @PathVariable Long id,
@@ -91,10 +80,7 @@ public class VendorController {
     }
 
 
-    // ============================================================
     // DELETE VENDOR
-    // ============================================================
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteVendor(
             @PathVariable Long id

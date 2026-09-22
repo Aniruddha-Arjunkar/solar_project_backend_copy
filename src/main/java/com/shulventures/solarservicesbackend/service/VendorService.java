@@ -17,37 +17,26 @@ public class VendorService {
     }
 
 
-    // ============================================================
     // CREATE VENDOR
-    // ============================================================
-
     public Vendor createVendor(Vendor vendor) {
         return vendorRepository.save(vendor);
     }
 
 
-    // ============================================================
     // GET ALL VENDORS
-    // ============================================================
-
     public List<Vendor> getAllVendors() {
         return vendorRepository.findAll();
     }
 
 
-    // ============================================================
     // GET VENDOR BY ID
-    // ============================================================
-
     public Optional<Vendor> getVendorById(Long id) {
         return vendorRepository.findById(id);
     }
 
 
-    // ============================================================
-    // UPDATE VENDOR
-    // ============================================================
 
+    // UPDATE VENDOR
     public Vendor updateVendor(
             Long id,
             Vendor updatedVendor
@@ -59,9 +48,8 @@ public class VendorService {
                                         "Vendor not found with id: " + id
                                 )
                         );
-        // ========================================================
+
         // UPDATE VENDOR INFORMATION
-        // ========================================================
 
         existingVendor.setVendorName(
                 updatedVendor.getVendorName()
@@ -84,10 +72,8 @@ public class VendorService {
     }
 
 
-    // ============================================================
-    // DELETE VENDOR
-    // ============================================================
 
+    // DELETE VENDOR
     public void deleteVendor(Long id) {
         if (!vendorRepository.existsById(id)) {
             throw new RuntimeException(
