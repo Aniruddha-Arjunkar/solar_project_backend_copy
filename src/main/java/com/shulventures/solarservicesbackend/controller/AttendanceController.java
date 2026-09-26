@@ -72,23 +72,6 @@ public class AttendanceController {
         );
     }
 
-//    @GetMapping("/month/{month}")
-//    public ResponseEntity<List<Attendance>> getMonthlyAttendance(
-//            @PathVariable String month
-//    ) {
-//
-//        List<Attendance> attendance =
-//                attendanceService.getMonthlyAttendance(
-//                        month
-//                );
-//
-//
-//        return ResponseEntity.ok(
-//                attendance
-//        );
-//    }
-
-
     // ============================================================
     // GET EMPLOYEE MONTHLY ATTENDANCE
     // ============================================================
@@ -113,29 +96,6 @@ public class AttendanceController {
                 attendance
         );
     }
-
-//    @GetMapping(
-//            "/employee/{employeeId}/month/{month}"
-//    )
-//    public ResponseEntity<List<Attendance>>
-//    getEmployeeMonthlyAttendance(
-//            @PathVariable Long employeeId,
-//            @PathVariable String month
-//    ) {
-//
-//        List<Attendance> attendance =
-//                attendanceService
-//                        .getEmployeeMonthlyAttendance(
-//                                employeeId,
-//                                month
-//                        );
-//
-//
-//        return ResponseEntity.ok(
-//                attendance
-//        );
-//    }
-
 
     // ============================================================
     // GET ATTENDANCE BY ID

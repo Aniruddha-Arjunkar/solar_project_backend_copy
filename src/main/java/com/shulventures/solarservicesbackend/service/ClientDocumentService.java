@@ -255,10 +255,7 @@ public class ClientDocumentService {
     // GET DOCUMENTS BY CLIENT
     //====================================================
 
-    public List<ClientDocument> getDocumentsByClient(
-            Long clientId
-    ) {
-
+    public List<ClientDocument> getDocumentsByClient(Long clientId) {
         return clientDocumentRepository
                 .findByClientId(clientId);
     }
@@ -282,31 +279,35 @@ public class ClientDocumentService {
 
         try {
 
-            Path filePath =
-                    Paths.get(
-                            document.getFilePath()
-                    ).normalize();
+            //=================== BUILD FILE PATH USING CURRENT ENVIRONMENT ================
 
-            Resource resource =
-                    new UrlResource(
-                            filePath.toUri()
-                    );
+            Path filePath =
+                    uploadDirectory
+                            .resolve(document.getStoredFileName())
+                            .normalize();
+
+
+            //======================== SECURITY CHECK =======================
+
+            if (!filePath.startsWith(uploadDirectory)) {
+                throw new RuntimeException("Invalid document file path.");
+            }
+
+
+            //============= CREATE RESOURCE ===================
+            Resource resource = new UrlResource(filePath.toUri());
+
+
+            //========= CHECK FILE EXISTS =======================
 
             if (!resource.exists()) {
-
-                throw new RuntimeException(
-                        "Document file does not exist."
-                );
+                throw new RuntimeException("Document file does not exist: " + filePath);
             }
 
             return resource;
 
         } catch (MalformedURLException error) {
-
-            throw new RuntimeException(
-                    "Unable to load document.",
-                    error
-            );
+            throw new RuntimeException("Unable to load document.", error);
         }
     }
 
@@ -315,9 +316,7 @@ public class ClientDocumentService {
     // GET DOCUMENT
     //====================================================
 
-    public ClientDocument getDocument(
-            Long documentId
-    ) {
+    public ClientDocument getDocument(Long documentId) {
 
         return clientDocumentRepository
                 .findById(documentId)
@@ -347,34 +346,19 @@ public class ClientDocumentService {
                         );
 
 
-        //================================================
-        // DELETE PHYSICAL FILE
-        //================================================
+        //=================== DELETE PHYSICAL FILE ====================
 
         try {
-
-            Path filePath =
-                    Paths.get(
-                            document.getFilePath()
-                    ).normalize();
-
+            Path filePath = uploadDirectory.resolve(document.getStoredFileName()).normalize();
             Files.deleteIfExists(filePath);
 
         } catch (IOException error) {
-
-            throw new RuntimeException(
-                    "Failed to delete document file.",
-                    error
-            );
+            throw new RuntimeException("Failed to delete document file.", error);
         }
 
 
-        //================================================
-        // DELETE DATABASE RECORD
-        //================================================
+        //==================== DELETE DATABASE RECORD =====================
 
-        clientDocumentRepository.delete(
-                document
-        );
+        clientDocumentRepository.delete(document);
     }
 }

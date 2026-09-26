@@ -250,34 +250,22 @@ public class EmployeeDocumentService {
                     extension.equals(".jpg") ||
                             extension.equals(".jpeg")
             ) {
-
                 fileType =
                         "image/jpeg";
 
             } else if (
                     extension.equals(".png")
             ) {
-
                 fileType =
                         "image/png";
             }
         }
 
+        document.setFileType(fileType);
 
-        document.setFileType(
-                fileType
-        );
+        document.setFileSize(file.getSize());
 
-
-        document.setFileSize(
-                file.getSize()
-        );
-
-
-        document.setFilePath(
-                targetPath.toString()
-        );
-
+        document.setFilePath(targetPath.toString());
 
         return employeeDocumentRepository
                 .save(document);
@@ -289,25 +277,15 @@ public class EmployeeDocumentService {
     // ============================================================
 
     public List<EmployeeDocument>
-    getDocumentsByEmployee(
-            Long employeeId
-    ) {
+    getDocumentsByEmployee(Long employeeId) {
 
-        if (!employeeRepository.existsById(
-                employeeId
-        )) {
-
-            throw new RuntimeException(
-                    "Employee not found with id: "
-                            + employeeId
-            );
+        if (!employeeRepository.existsById(employeeId)) {
+            throw new RuntimeException("Employee not found with id: " + employeeId);
         }
 
 
         return employeeDocumentRepository
-                .findByEmployeeId(
-                        employeeId
-                );
+                .findByEmployeeId(employeeId);
     }
 
 
@@ -315,9 +293,7 @@ public class EmployeeDocumentService {
     // GET DOCUMENT
     // ============================================================
 
-    public EmployeeDocument getDocument(
-            Long documentId
-    ) {
+    public EmployeeDocument getDocument(Long documentId) {
 
         return employeeDocumentRepository
                 .findById(documentId)
@@ -334,46 +310,33 @@ public class EmployeeDocumentService {
     // GET DOCUMENT FILE
     // ============================================================
 
-    public Resource getDocumentFile(
-            Long documentId
-    ) {
+    public Resource getDocumentFile(Long documentId) {
 
-        EmployeeDocument document =
-                getDocument(documentId);
-
+        EmployeeDocument document = getDocument(documentId);
 
         try {
 
-            Path filePath =
-                    Paths.get(
-                            document.getFilePath()
-                    ).normalize();
+            // ==================== BUILD FILE PATH USING CURRENT ENVIRONMENT ============================
+            Path filePath = uploadDirectory.resolve(document.getStoredFileName()).normalize();
 
-
-            Resource resource =
-                    new UrlResource(
-                            filePath.toUri()
-                    );
-
-
-            if (!resource.exists()) {
-
-                throw new RuntimeException(
-                        "Employee document file does not exist."
-                );
+            // ========== SECURITY CHECK =============================
+            if (!filePath.startsWith(uploadDirectory)) {
+                throw new RuntimeException("Invalid employee document file path.");
             }
 
+            // ========== CREATE RESOURCE ===========================
+            Resource resource = new UrlResource(filePath.toUri());
 
+
+            // =============== CHECK FILE EXISTS ====================
+
+            if (!resource.exists()) {
+                throw new RuntimeException("Employee document file does not exist: " + filePath);
+            }
             return resource;
 
-        } catch (
-                MalformedURLException error
-        ) {
-
-            throw new RuntimeException(
-                    "Unable to load employee document.",
-                    error
-            );
+        } catch (MalformedURLException error) {
+            throw new RuntimeException("Unable to load employee document.",error);
         }
     }
 
@@ -382,29 +345,17 @@ public class EmployeeDocumentService {
     // DELETE DOCUMENT
     // ============================================================
 
-    public void deleteDocument(
-            Long documentId
-    ) {
+    public void deleteDocument(Long documentId) {
 
-        EmployeeDocument document =
-                getDocument(documentId);
+        EmployeeDocument document = getDocument(documentId);
 
-
-        // --------------------------------------------------------
-        // DELETE PHYSICAL FILE
-        // --------------------------------------------------------
+        // -------- DELETE PHYSICAL FILE --------------------
 
         try {
 
-            Path filePath =
-                    Paths.get(
-                            document.getFilePath()
-                    ).normalize();
+            Path filePath = uploadDirectory.resolve(document.getStoredFileName()).normalize();
 
-
-            Files.deleteIfExists(
-                    filePath
-            );
+            Files.deleteIfExists(filePath);
 
         } catch (IOException error) {
 
@@ -414,13 +365,8 @@ public class EmployeeDocumentService {
             );
         }
 
+        // ------------------ DELETE DATABASE RECORD --------------------
 
-        // --------------------------------------------------------
-        // DELETE DATABASE RECORD
-        // --------------------------------------------------------
-
-        employeeDocumentRepository.delete(
-                document
-        );
+        employeeDocumentRepository.delete(document);
     }
 }

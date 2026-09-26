@@ -773,9 +773,7 @@ public class ClientService {
                 client.getTotalAmount();
 
         if (baseAmount == null) {
-
             baseAmount = BigDecimal.ZERO;
-
             client.setTotalAmount(baseAmount);
         }
 

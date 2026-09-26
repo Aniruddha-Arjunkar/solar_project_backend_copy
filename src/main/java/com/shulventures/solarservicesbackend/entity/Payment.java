@@ -11,18 +11,9 @@ import java.time.LocalDateTime;
 @Table(name = "payments")
 public class Payment {
 
-    // ============================================================
-    // PRIMARY KEY
-    // ============================================================
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-
-    // ============================================================
-    // CLIENT REFERENCE
-    // ============================================================
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
@@ -33,27 +24,12 @@ public class Payment {
     private Client client;
 
 
-    // ============================================================
-    // PAYMENT INFORMATION
-    // ============================================================
-
-    /*
-     * Actual payable amount of the client.
-     *
-     * This will normally come from:
-     *
-     * Client.finalAmount
-     */
     @Column(
             precision = 15,
             scale = 2
     )
     private BigDecimal totalAmount;
 
-
-    /*
-     * Amount paid in this particular payment transaction.
-     */
     @Column(
             precision = 15,
             scale = 2,
@@ -61,98 +37,35 @@ public class Payment {
     )
     private BigDecimal paidAmount;
 
-
-    /*
-     * Remaining amount after this payment.
-     *
-     * Example:
-     *
-     * Total Amount = 300000
-     * Previous Paid = 100000
-     * Current Payment = 50000
-     *
-     * Due Amount = 150000
-     */
     @Column(
             precision = 15,
             scale = 2
     )
     private BigDecimal dueAmount;
 
-
-    // ============================================================
-    // DATE INFORMATION
-    // ============================================================
-
-    /*
-     * Date on which the payment was made.
-     */
     private LocalDate paymentDate;
 
-
-    /*
-     * Next date on which payment is expected.
-     */
     private LocalDate dueDate;
 
-
-    // ============================================================
-    // PAYMENT GATEWAY
-    // ============================================================
-
-    /*
-     * Examples:
-     *
-     * Cash
-     * Google Pay
-     * PhonePe
-     * Bank Transfer
-     * Cheque
-     * Other
-     */
     private String paymentGateway;
 
-
-    // ============================================================
-    // VENDOR REFERENCE
-    // ============================================================
-
-    /*
-     * If the client belongs to a vendor,
-     * this stores the vendor ID.
-     *
-     * For Admin-created clients this can remain null.
-     */
     private Long vendorId;
 
 
-    // ============================================================
-    // TIMESTAMPS
-    // ============================================================
-
     private LocalDateTime createdAt;
-
     private LocalDateTime updatedAt;
 
 
-    // ============================================================
-    // LIFECYCLE
-    // ============================================================
-
     @PrePersist
     protected void onCreate() {
-
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
-
     }
 
 
     @PreUpdate
     protected void onUpdate() {
-
         updatedAt = LocalDateTime.now();
-
     }
 
 
