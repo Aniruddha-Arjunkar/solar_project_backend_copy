@@ -3,7 +3,6 @@ package com.shulventures.solarservicesbackend.dto;
 import java.time.LocalDate;
 
 public class PendingWorkResponse {
-
     private Long id;
     private Long clientId;
     private String clientName;
@@ -12,9 +11,7 @@ public class PendingWorkResponse {
     private LocalDate dueDate;
     private String status;
 
-    // ---------------------------------------------------------
-    // CONSTRUCTOR
-    // ---------------------------------------------------------
+    // ----------- CONSTRUCTOR --------------------
 
     public PendingWorkResponse(
             Long id,

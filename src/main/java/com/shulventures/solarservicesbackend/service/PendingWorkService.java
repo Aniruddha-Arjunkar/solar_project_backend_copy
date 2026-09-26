@@ -72,7 +72,6 @@ public class PendingWorkService {
     // ==================== GET PENDING ONLY ====================
 
     public List<PendingWork> getPendingWork() {
-
         return pendingWorkRepository.findByStatus("Pending");
     }
 
@@ -81,7 +80,7 @@ public class PendingWorkService {
     public List<PendingWorkResponse> getPendingWorkWithClient() {
 
         return pendingWorkRepository
-                .findAll()
+                .findByStatus("Pending")
                 .stream()
                 .map(work -> new PendingWorkResponse(
                         work.getId(),

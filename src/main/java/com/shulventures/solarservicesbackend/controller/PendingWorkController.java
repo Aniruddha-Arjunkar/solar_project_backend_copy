@@ -16,10 +16,7 @@ public class PendingWorkController {
 
     private final PendingWorkService pendingWorkService;
 
-
-    public PendingWorkController(
-            PendingWorkService pendingWorkService
-    ) {
+    public PendingWorkController(PendingWorkService pendingWorkService) {
         this.pendingWorkService = pendingWorkService;
     }
 
@@ -27,20 +24,10 @@ public class PendingWorkController {
     // ==================== CREATE ====================
 
     @PostMapping("/client/{clientId}")
-    public ResponseEntity<PendingWork> createPendingWork(
-            @PathVariable Long clientId,
-            @RequestBody PendingWork pendingWork
-    ) {
-        PendingWork savedWork =
-                pendingWorkService.createPendingWork(
-                        clientId,
-                        pendingWork
-                );
+    public ResponseEntity<PendingWork> createPendingWork(@PathVariable Long clientId, @RequestBody PendingWork pendingWork) {
+        PendingWork savedWork = pendingWorkService.createPendingWork(clientId, pendingWork);
 
-        return new ResponseEntity<>(
-                savedWork,
-                HttpStatus.CREATED
-        );
+        return new ResponseEntity<>(savedWork, HttpStatus.CREATED);
     }
 
 
@@ -48,46 +35,32 @@ public class PendingWorkController {
 
     @GetMapping
     public ResponseEntity<List<PendingWork>> getAllPendingWork() {
-
-        return ResponseEntity.ok(
-                pendingWorkService.getAllPendingWork()
-        );
+        return ResponseEntity.ok(pendingWorkService.getAllPendingWork());
     }
 
 
     // ==================== GET PENDING ONLY ====================
-
+    // It will retun only Pending Work not Client Like Client name
     @GetMapping("/pending")
     public ResponseEntity<List<PendingWork>> getPendingWork() {
-
-        return ResponseEntity.ok(
-                pendingWorkService.getPendingWork()
-        );
+        return ResponseEntity.ok(pendingWorkService.getPendingWork());
     }
 
 
     // ==================== GET PENDING WORK WITH CLIENT =============
-
+    //It will return Client with Pending Work  through DTO
     @GetMapping("/pending-with-client")
     public ResponseEntity<List<PendingWorkResponse>> getPendingWorkWithClient() {
-
-        return ResponseEntity.ok(
-                pendingWorkService.getPendingWorkWithClient()
-        );
+        return ResponseEntity.ok(pendingWorkService.getPendingWorkWithClient());
     }
 
 
     // ==================== GET BY CLIENT ====================
 
     @GetMapping("/client/{clientId}")
-    public ResponseEntity<List<PendingWork>> getByClient(
-            @PathVariable Long clientId
-    ) {
-
+    public ResponseEntity<List<PendingWork>> getByClient(@PathVariable Long clientId) {
         return ResponseEntity.ok(
-                pendingWorkService.getPendingWorkByClient(
-                        clientId
-                )
+                pendingWorkService.getPendingWorkByClient(clientId)
         );
     }
 
@@ -110,19 +83,13 @@ public class PendingWorkController {
 
     // ==================== MARK COMPLETE ====================
     @PutMapping("/{id}/complete")
-    public ResponseEntity<PendingWork> markComplete(
-            @PathVariable Long id
-    ) {
-        return ResponseEntity.ok(
-                pendingWorkService.markComplete(id)
-        );
+    public ResponseEntity<PendingWork> markComplete(@PathVariable Long id) {
+        return ResponseEntity.ok(pendingWorkService.markComplete(id));
     }
 
     // ==================== DELETE ====================
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePendingWork(
-            @PathVariable Long id
-    ) {
+    public ResponseEntity<Void> deletePendingWork(@PathVariable Long id) {
         pendingWorkService.deletePendingWork(id);
         return ResponseEntity.noContent().build();
     }
