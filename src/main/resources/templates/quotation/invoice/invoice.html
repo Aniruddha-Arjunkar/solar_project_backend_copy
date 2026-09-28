@@ -2,20 +2,26 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>GST Invoice</title>
-    <style>
+    <title>Tax Invoice</title>
 
+    <style>
         @page {
             size: A4;
-            margin: 30px;
+            margin: 12mm 12mm 18mm 12mm;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10px;
+            color: #1f2937;
+            background-color: #ffffff;
         }
 
         body {
-            font-family: Arial, sans-serif;
-            font-size: 12px;
-            color: #222;
-            margin: 0;
-            padding: 0;
+            line-height: 1.25;
         }
 
         .invoice-container {
@@ -23,58 +29,154 @@
         }
 
         /* ============================================================
-           HEADER
+           COMPANY HEADER
         ============================================================ */
 
-        .header {
+        .header-table {
             width: 100%;
-            margin-bottom: 20px;
+            border-collapse: collapse;
+            margin-bottom: 8px;
+        }
+
+        .header-table td {
+            border: none;
+            padding: 0;
+            vertical-align: middle;
+        }
+
+        .header-left {
+            width: 58%;
+        }
+
+        .header-right {
+            width: 42%;
+            text-align: right;
         }
 
         .company-name {
-            font-size: 24px;
+            margin: 0;
+            color: #14532d;
+            font-size: 23px;
             font-weight: bold;
-            margin-bottom: 5px;
+            letter-spacing: 0.8px;
         }
 
-        .company-details {
-            font-size: 11px;
-            line-height: 1.5;
+        .company-tagline {
+            margin-top: 2px;
+            color: #64748b;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .company-contact {
+            margin-top: 3px;
+            color: #475569;
+            font-size: 8.5px;
+            line-height: 1.45;
         }
 
         .invoice-title {
-            text-align: right;
-            font-size: 28px;
+            color: #14532d;
+            font-size: 22px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .invoice-subtitle {
+            margin-top: 4px;
+            color: #64748b;
+            font-size: 8px;
+            font-weight: bold;
+            letter-spacing: 0.6px;
+        }
+
+        .header-rule {
+            width: 100%;
+            height: 3px;
+            background-color: #166534;
+            margin: 8px 0 13px 0;
+        }
+
+        /* ============================================================
+           INVOICE META
+        ============================================================ */
+
+        .meta-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 12px;
+        }
+
+        .meta-table td {
+            border: 1px solid #b7c7a3;
+            padding: 7px 9px;
+            background-color: #f3f7ec;
+            vertical-align: middle;
+        }
+
+        .meta-label {
+            color: #14532d;
+            font-weight: bold;
+        }
+
+        .meta-value {
+            color: #1f2937;
             font-weight: bold;
         }
 
         /* ============================================================
-           CUSTOMER + INVOICE INFORMATION
+           CUSTOMER INFORMATION
         ============================================================ */
 
-        .info-table {
+        .section-label {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 6px 9px;
+            background-color: #b7cf89;
+            border: 1px solid #6d8f45;
+            color: #1f2937;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.45px;
+        }
+
+        .customer-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            margin-bottom: 13px;
         }
 
-        .info-table td {
+        .customer-table td {
+            border: 1px solid #4b5563;
+            padding: 8px 9px;
             vertical-align: top;
-            padding: 8px;
-            border: 1px solid #ccc;
+            background-color: #ffffff;
         }
 
-        .section-title {
-            font-weight: bold;
+        .customer-column-title {
             margin-bottom: 6px;
+            color: #14532d;
+            font-size: 10px;
+            font-weight: bold;
         }
 
-        .customer-details {
-            line-height: 1.6;
+        .customer-name {
+            color: #111827;
+            font-size: 10.5px;
+            font-weight: bold;
+            margin-bottom: 4px;
         }
 
-        .invoice-details {
-            line-height: 1.8;
+        .customer-line {
+            color: #334155;
+            font-size: 9px;
+            line-height: 1.5;
+        }
+
+        .customer-line-label {
+            color: #475569;
+            font-weight: bold;
         }
 
         /* ============================================================
@@ -84,19 +186,62 @@
         .items-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            table-layout: fixed;
+            margin-top: 2px;
         }
 
         .items-table th {
-            background-color: #eeeeee;
-            border: 1px solid #999;
-            padding: 8px;
+            background-color: #b7cf89;
+            border: 1px solid #4b5563;
+            padding: 6px 4px;
+            color: #1f2937;
+            font-size: 12px;
+            font-weight: bold;
             text-align: center;
+            vertical-align: middle;
         }
 
         .items-table td {
-            border: 1px solid #999;
-            padding: 8px;
+            border: 1px solid #4b5563;
+            padding: 6px 4px;
+            color: #1f2937;
+            font-size: 10px;
+            vertical-align: middle;
+            background-color: #ffffff;
+            line-height: 1.3;
+            word-wrap: break-word;
+        }
+
+        .col-sn {
+            width: 5%;
+        }
+
+        .col-item {
+            width: 25%;
+        }
+
+        .col-hsn {
+            width: 11%;
+        }
+
+        .col-qty {
+            width: 8%;
+        }
+
+        .col-rate {
+            width: 12%;
+        }
+
+        .col-cgst {
+            width: 10%;
+        }
+
+        .col-sgst {
+            width: 10%;
+        }
+
+        .col-total {
+            width: 19%;
         }
 
         .text-left {
@@ -111,24 +256,97 @@
             text-align: right;
         }
 
+        .tax-rate {
+            color: #14532d;
+            font-weight: bold;
+        }
+
+        .tax-amount {
+            margin-top: 2px;
+            color: #334155;
+            font-size: 10px;
+        }
+
+        .item-total {
+            color: #14532d;
+            font-weight: bold;
+        }
+
         /* ============================================================
-           TOTALS
+           TOTAL SUMMARY
         ============================================================ */
 
+        .summary-wrap {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 11px;
+        }
+
+        .summary-wrap td {
+            border: none;
+            padding: 0;
+            vertical-align: top;
+        }
+
+        .amount-words-cell {
+            width: 54%;
+            padding-right: 10px !important;
+        }
+
+        .amount-words-box {
+            border: 1px solid #b7c7a3;
+            background-color: #f3f7ec;
+            padding: 9px;
+        }
+
+        .amount-words-title {
+            color: #14532d;
+            font-weight: bold;
+            margin-bottom: 4px;
+            font-size: 11px;
+        }
+
+        .amount-words-text {
+            color: #334155;
+            font-size: 9px;
+            line-height: 1.45;
+        }
+
+        .totals-cell {
+            width: 46%;
+        }
+
         .totals-table {
-            width: 45%;
-            margin-left: auto;
-            margin-top: 20px;
+            width: 100%;
             border-collapse: collapse;
         }
 
         .totals-table td {
-            border: 1px solid #ccc;
-            padding: 8px;
+            border: 1px solid #4b5563;
+            padding: 6px 8px;
+            background-color: #ffffff;
+            font-size: 10px;
         }
 
-        .grand-total {
-            font-size: 15px;
+        .total-label {
+            width: 58%;
+            color: #334155;
+            font-weight: bold;
+            background-color: #edf3e4 !important;
+        }
+
+        .total-value {
+            width: 42%;
+            text-align: right;
+            color: #14532d;
+            font-weight: bold;
+        }
+
+        .grand-total td {
+            background-color: #166534 !important;
+            border-color: #14532d !important;
+            color: #ffffff !important;
+            font-size: 10.5px;
             font-weight: bold;
         }
 
@@ -136,388 +354,321 @@
            NOTES
         ============================================================ */
 
-        .notes {
-            margin-top: 30px;
-            border: 1px solid #ccc;
-            padding: 10px;
+        .notes-section {
+            margin-top: 13px;
+        }
+
+        .notes-box {
+            border: 1px solid #cbd5e1;
+            border-left: 4px solid #166534;
+            padding: 8px 10px;
+            background-color: #f8fafc;
+            color: #334155;
+            font-size: 8.5px;
+            line-height: 1.5;
         }
 
         .notes-title {
+            color: #14532d;
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
 
         /* ============================================================
            FOOTER
         ============================================================ */
 
-        .footer {
-            margin-top: 40px;
-            font-size: 10px;
-            text-align: center;
+        .footer-box {
+            width: 100%;
+            margin-top: 20px;
+            border-top: 1px solid #8baa5e;
+            background-color: #e8f2ef;
+            padding: 7px 9px;
+            box-sizing: border-box;
         }
 
-    </style>
+        .footer-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
+        .footer-table td {
+            border: none;
+            padding: 0;
+            color: #475569;
+            font-size: 7.5px;
+            vertical-align: top;
+        }
+
+        .footer-left {
+            width: 65%;
+        }
+
+        .footer-right {
+            width: 35%;
+            text-align: right;
+        }
+
+        .footer-company {
+            color: #14532d;
+            font-weight: bold;
+        }
+
+        .footer-small {
+            margin-top: 2px;
+            line-height: 1.4;
+        }
+
+
+        /* ============================================================
+           PDF-SAFE BEHAVIOUR
+        ============================================================ */
+
+        table,
+        tr,
+        td,
+        th {
+            page-break-inside: avoid;
+        }
+
+        .section-label,
+        .customer-table,
+        .items-table,
+        .summary-wrap,
+        .notes-section {
+            page-break-inside: avoid;
+        }
+    </style>
 </head>
 
 <body>
-
 <div class="invoice-container">
 
     <!-- ============================================================
          COMPANY HEADER
     ============================================================ -->
 
-    <table class="header">
-
+    <table class="header-table">
         <tr>
-
-            <td style="width: 60%; border: none;">
-
-                <div class="company-name">
-                    Shul Ventures
-                </div>
-
-                <div class="company-details">
-                    Solar Services<br />
-                    Pune, Maharashtra<br />
+            <td class="header-left">
+                <div class="company-name">Solar Solutions</div>
+                <div class="company-tagline">Solar Energy Solutions</div>
+                <div class="company-contact">
+                    Nagpur, Maharashtra<br/>
                     India
                 </div>
-
             </td>
 
-            <td style="width: 40%; border: none;">
-
-                <div class="invoice-title">
-                    TAX INVOICE
-                </div>
-
+            <td class="header-right">
+                <div class="invoice-title">TAX INVOICE</div>
+                <div class="invoice-subtitle">GST INVOICE</div>
             </td>
-
         </tr>
-
     </table>
 
+    <div class="header-rule"></div>
 
-    <!-- ============================================================
-         CUSTOMER + INVOICE DETAILS
-    ============================================================ -->
-
-    <table class="info-table">
-
+    <table class="meta-table">
         <tr>
-
-            <!-- CUSTOMER -->
-
-            <td style="width: 55%;">
-
-                <div class="section-title">
-                    Bill To
-                </div>
-
-                <div class="customer-details">
-
-                    <strong th:text="${invoice.custName}">
-                        Customer Name
-                    </strong>
-
-                    <br/>
-
-                    Phone:
-                    <span th:text="${invoice.custPhone}">
-                        Phone
-                    </span>
-
-                    <br/>
-
-                    Email:
-                    <span th:text="${invoice.custEmail}">
-                        Email
-                    </span>
-
-                    <br/>
-
-                    Billing Address:
-                    <span th:text="${invoice.billingAddress}">
-                        Billing Address
-                    </span>
-
-                    <br/>
-
-                    Shipping Address:
-                    <span th:text="${invoice.shippingAddress}">
-                        Shipping Address
-                    </span>
-
-                </div>
-
+            <td>
+                <span class="meta-label">Invoice No:</span>
+                <span class="meta-value" th:text="${invoice.gstInvoiceNo}">GST-INV-000</span>
             </td>
-
-
-            <!-- INVOICE DETAILS -->
-
-            <td style="width: 45%;">
-
-                <div class="section-title">
-                    Invoice Details
-                </div>
-
-                <div class="invoice-details">
-
-                    Invoice No:
-                    <strong th:text="${invoice.gstInvoiceNo}">
-                        GST-INV-000
-                    </strong>
-
-                    <br/>
-
-                    Invoice Date:
-                    <span th:text="${invoice.invoiceDate}">
-                        2026-01-01
-                    </span>
-
-                    <br/>
-
-                    Due Date:
-                    <span th:text="${invoice.dueDate}">
-                        2026-01-15
-                    </span>
-
-                    <br/>
-
-                    Inquiry ID:
-                    <span th:text="${invoice.inquiryId}">
-                        0
-                    </span>
-
-                </div>
-
+            <td>
+                <span class="meta-label">Invoice Date:</span>
+                <span class="meta-value" th:text="${invoice.invoiceDate}">2026-01-01</span>
             </td>
-
+            <td>
+                <span class="meta-label">Due Date:</span>
+                <span class="meta-value" th:text="${invoice.dueDate}">2026-01-15</span>
+            </td>
         </tr>
-
     </table>
 
+    <!-- ============================================================
+         BILLING / SERVICE DETAILS
+    ============================================================ -->
+
+    <div class="section-label">Invoice To</div>
+
+    <table class="customer-table">
+        <tr>
+            <td style="width: 50%;">
+                <div class="customer-column-title">Billing Address</div>
+
+                <div class="customer-name" th:text="${invoice.custName}">
+                    Customer Name
+                </div>
+
+                <div class="customer-line">
+                    <span class="customer-line-label">Phone:</span>
+                    <span th:text="${invoice.custPhone}">Phone</span>
+                </div>
+
+                <div class="customer-line">
+                    <span class="customer-line-label">Email:</span>
+                    <span th:text="${invoice.custEmail}">Email</span>
+                </div>
+
+                <div class="customer-line">
+                    <span class="customer-line-label">Address:</span>
+                    <span th:text="${invoice.billingAddress}">Billing Address</span>
+                </div>
+            </td>
+
+            <td style="width: 50%;">
+                <div class="customer-column-title">Service / Shipping Address</div>
+
+                <div class="customer-name" th:text="${invoice.custName}">
+                    Customer Name
+                </div>
+
+                <div class="customer-line">
+                    <span class="customer-line-label">Phone:</span>
+                    <span th:text="${invoice.custPhone}">Phone</span>
+                </div>
+
+                <div class="customer-line">
+                    <span class="customer-line-label">Email:</span>
+                    <span th:text="${invoice.custEmail}">Email</span>
+                </div>
+
+                <div class="customer-line">
+                    <span class="customer-line-label">Address:</span>
+                    <span th:text="${invoice.shippingAddress}">Shipping Address</span>
+                </div>
+            </td>
+        </tr>
+    </table>
 
     <!-- ============================================================
-         INVOICE ITEMS
+         ITEM DETAILS
     ============================================================ -->
+
+    <div class="section-label">Item / Service Details</div>
 
     <table class="items-table">
-
         <thead>
-
         <tr>
-
-            <th style="width: 5%;">
-                #
-            </th>
-
-            <th style="width: 25%;">
-                Item / Service
-            </th>
-
-            <th style="width: 12%;">
-                HSN
-            </th>
-
-            <th style="width: 8%;">
-                Qty
-            </th>
-
-            <th style="width: 12%;">
-                Rate
-            </th>
-
-            <th style="width: 10%;">
-                CGST
-            </th>
-
-            <th style="width: 10%;">
-                SGST
-            </th>
-
-            <th style="width: 18%;">
-                Total
-            </th>
-
+            <th class="col-sn">S. N.</th>
+            <th class="col-item">Item / Service</th>
+            <th class="col-hsn">HSN / SAC</th>
+            <th class="col-qty">Qty</th>
+            <th class="col-rate">Rate / Item</th>
+            <th class="col-cgst">CGST</th>
+            <th class="col-sgst">SGST</th>
+            <th class="col-total">Total</th>
         </tr>
-
         </thead>
 
-
         <tbody>
-
         <tr th:each="item, itemStat : ${invoice.items}">
+            <td class="text-center" th:text="${itemStat.count}">1</td>
 
-            <td class="text-center"
-                th:text="${itemStat.count}">
-                1
-            </td>
-
-            <td class="text-left"
-                th:text="${item.itemName}">
+            <td class="text-left" th:text="${item.itemName}">
                 Solar Panel Installation
             </td>
 
-            <td class="text-center"
-                th:text="${item.hsn}">
+            <td class="text-center" th:text="${item.hsn}">
                 85414011
             </td>
 
-            <td class="text-center"
-                th:text="${item.qty}">
+            <td class="text-center" th:text="${item.qty}">
                 1
             </td>
 
-            <td class="text-right"
-                th:text="${item.rate}">
+            <td class="text-right" th:text="${item.rate}">
                 100000.00
             </td>
 
-            <td class="text-right">
-
-                <span th:text="${item.cgstPer}">
-                    9
-                </span>
-                %
-
-                <br />
-
-                <span th:text="${item.cgstAmt}">
-                    9000.00
-                </span>
-
+            <td class="text-center">
+                <div class="tax-rate">
+                    <span th:text="${item.cgstPer}">9</span>%
+                </div>
+                <div class="tax-amount">
+                     <span th:text="${item.cgstAmt}">9000.00</span>
+                </div>
             </td>
 
-            <td class="text-right">
-
-                <span th:text="${item.sgstPer}">
-                    9
-                </span>
-                %
-
-                <br/>
-
-                <span th:text="${item.sgstAmt}">
-                    9000.00
-                </span>
-
+            <td class="text-center">
+                <div class="tax-rate">
+                    <span th:text="${item.sgstPer}">9</span>%
+                </div>
+                <div class="tax-amount">
+                     <span th:text="${item.sgstAmt}">9000.00</span>
+                </div>
             </td>
 
-            <td class="text-right"
-                th:text="${item.itemTotal}">
+            <td class="text-right item-total" th:text="${item.itemTotal}">
                 118000.00
             </td>
-
         </tr>
-
         </tbody>
-
     </table>
 
-
     <!-- ============================================================
-         TOTALS
+         TOTALS + AMOUNT SUMMARY
     ============================================================ -->
 
-    <table class="totals-table">
-
+    <table class="summary-wrap">
         <tr>
-
-            <td>
-                Subtotal
+            <td class="amount-words-cell">
+                <div class="amount-words-box">
+                    <div class="amount-words-title">Payment Summary</div>
+                    <div class="amount-words-text">
+                        Thank you for choosing Solar Solutions. Please ensure the invoice amount is paid
+                        according to the agreed payment terms.
+                    </div>
+                </div>
             </td>
 
-            <td class="text-right"
-                th:text="${invoice.subtotal}">
-                100000.00
+            <td class="totals-cell">
+                <table class="totals-table">
+                    <tr>
+                        <td class="total-label">Subtotal</td>
+                        <td class="total-value" th:text="${invoice.subtotal}">100000.00</td>
+                    </tr>
+                    <tr>
+                        <td class="total-label">Total CGST</td>
+                        <td class="total-value" th:text="${invoice.totalCgst}">9000.00</td>
+                    </tr>
+                    <tr>
+                        <td class="total-label">Total SGST</td>
+                        <td class="total-value" th:text="${invoice.totalSgst}">9000.00</td>
+                    </tr>
+                    <tr class="grand-total">
+                        <td>Grand Total</td>
+                        <td class="text-right" th:text="${invoice.grandTotal}">118000.00</td>
+                    </tr>
+                </table>
             </td>
-
         </tr>
-
-
-        <tr>
-
-            <td>
-                Total CGST
-            </td>
-
-            <td class="text-right"
-                th:text="${invoice.totalCgst}">
-                9000.00
-            </td>
-
-        </tr>
-
-
-        <tr>
-
-            <td>
-                Total SGST
-            </td>
-
-            <td class="text-right"
-                th:text="${invoice.totalSgst}">
-                9000.00
-            </td>
-
-        </tr>
-
-
-        <tr class="grand-total">
-
-            <td>
-                Grand Total
-            </td>
-
-            <td class="text-right"
-                th:text="${invoice.grandTotal}">
-                118000.00
-            </td>
-
-        </tr>
-
     </table>
-
-
-    <!-- ============================================================
-         NOTES
-    ============================================================ -->
-
-    <div class="notes"
-         th:if="${invoice.notes != null and !#strings.isEmpty(invoice.notes)}">
-
-        <div class="notes-title">
-            Notes
-        </div>
-
-        <div th:text="${invoice.notes}">
-            Invoice notes
-        </div>
-
-    </div>
-
 
     <!-- ============================================================
          FOOTER
     ============================================================ -->
 
-    <div class="footer">
+    <div class="footer-box">
+        <table class="footer-table">
+            <tr>
+                <td class="footer-left">
+                    <div class="footer-company">Solar Solutions</div>
+                    <div class="footer-small">
+                        Solar Energy Solutions | Nagpur, Maharashtra, India
+                    </div>
+                </td>
 
-        <p>
-            Thank you for choosing Shul Ventures.
-        </p>
-
-        <p>
-            This is a computer-generated invoice and does not require a signature.
-        </p>
-
+                <td class="footer-right">
+                    <div>Thank you for your business.</div>
+                    <div class="footer-small">
+                        Computer-generated invoice - no signature required.
+                    </div>
+                </td>
+            </tr>
+        </table>
     </div>
 
 </div>
-
 </body>
-
 </html>
