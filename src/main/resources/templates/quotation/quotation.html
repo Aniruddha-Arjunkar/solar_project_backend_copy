@@ -1,20 +1,14 @@
 <!DOCTYPE html>
+
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
-
-    <meta charset="UTF-8" />
-
+    <meta charset="utf-8"/>
     <title>Quotation</title>
-
     <style>
-
-        /* =========================================
-           PAGE        ========================================= */
 
         @page {
             size: A4;
-            margin: 12mm 12mm 15mm 12mm;
+            margin: 11mm 12mm 14mm 12mm;
         }
 
         html,
@@ -23,14 +17,9 @@
             padding: 0;
             font-family: Arial, Helvetica, sans-serif;
             font-size: 10px;
-            color: #222;
-            background: #ffffff;
+            color: #1f2937;
+            background-color: #ffffff;
         }
-
-
-        /* =========================================
-           PAGE CONTAINER
-        ========================================= */
 
         .quotation-page {
             width: 100%;
@@ -42,46 +31,58 @@
             page-break-before: always;
         }
 
-
-        /* =========================================
+        /* ==========================================================
            COMPANY HEADER
-        ========================================= */
+        ========================================================== */
 
         .company-header {
-            border-bottom: 2px solid #222;
-            padding-bottom: 9px;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 8px 0 10px 0;
             margin-bottom: 12px;
+            border-bottom: 3px solid #14532d;
         }
 
         .company-name {
-            font-size: 22px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            margin-bottom: 3px;
+            margin: 0;
+            color: #14532d;
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 1.2px;
         }
 
         .company-subtitle {
+            margin: 2px 0 8px 0;
+            color: #64748b;
             font-size: 10px;
-            color: #555;
-            margin-bottom: 10px;
+            font-weight: 600;
+            letter-spacing: 0.35px;
         }
 
         .quotation-title {
+            width: 150px;
+            margin: 8px auto 0 auto;
+            padding: 7px 10px;
+            box-sizing: border-box;
             text-align: center;
-            font-size: 17px;
-            font-weight: bold;
+            background-color: #14532d;
+            color: #ffffff;
+            border: 1px solid #14532d;
+            font-size: 14px;
+            font-weight: 800;
             letter-spacing: 2px;
-            margin-top: 4px;
         }
 
-
-        /* =========================================
-           QUOTATION INFORMATION
-        ========================================= */
+        /* ==========================================================
+           QUOTATION INFO
+        ========================================================== */
 
         .quotation-info-box {
-            border: 1px solid #333;
+            width: 100%;
             margin-bottom: 12px;
+            border: 1px solid #8baa5e;
+            background-color: #eef5e4;
+            box-sizing: border-box;
         }
 
         .info-table {
@@ -90,43 +91,137 @@
         }
 
         .info-table td {
-            padding: 6px 8px;
-            border-right: 1px solid #777;
-        }
-
-        .info-table td:last-child {
-            border-right: none;
+            width: 50%;
+            padding: 8px 10px;
+            border: 1px solid #b9c99e;
+            color: #1f2937;
         }
 
         .info-label {
-            font-weight: bold;
+            color: #14532d;
+            font-weight: 700;
             margin-right: 5px;
         }
 
-
-        /* =========================================
+        /* ==========================================================
            SECTION
-        ========================================= */
+        ========================================================== */
 
         .section {
-            margin-bottom: 13px;
+            width: 100%;
+            margin-bottom: 12px;
+            page-break-inside: avoid;
         }
 
         .section-title {
-            background: #333333;
-            color: #ffffff;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 7px 9px;
+            background-color: #b7cf89;
+            color: #1f2937;
+            border: 1px solid #6d8f45;
             font-size: 10px;
-            font-weight: bold;
-            padding: 6px 8px;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.4px;
-            border: 1px solid #222222;
+            letter-spacing: 0.55px;
         }
 
-
         /* =========================================
-           CLIENT DETAILS
+           PROPOSAL INTRODUCTION
         ========================================= */
+
+        .proposal-intro {
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 14px;
+            padding: 11px 13px 12px 13px;
+            border: 1px solid #cbd5e1;
+            border-left: 4px solid #166534;
+            background-color: #f8fbf3;
+        }
+
+        .proposal-meta {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .proposal-meta-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .proposal-meta-table td {
+            border: none;
+            padding: 1px 0;
+            vertical-align: top;
+            line-height: 1.35;
+        }
+
+        .proposal-meta-label {
+            width: 18%;
+            color: #166534;
+            font-weight: 700;
+        }
+
+        .proposal-meta-value {
+            width: 82%;
+            color: #1f2937;
+        }
+
+        .proposal-subject {
+            margin: 9px 0 10px 0;
+            padding: 6px 8px;
+            border-top: 1px solid #cbd5e1;
+            border-bottom: 1px solid #cbd5e1;
+            color: #166534;
+            font-weight: 700;
+        }
+
+        .proposal-greeting {
+            margin: 0 0 7px 0;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .proposal-paragraph {
+            margin: 0 0 7px 0;
+            line-height: 1.5;
+            color: #334155;
+            text-align: justify;
+        }
+
+        .proposal-benefits-title {
+            margin: 8px 0 4px 0;
+            color: #166534;
+            font-weight: 700;
+        }
+
+        .proposal-benefits {
+            margin: 0 0 7px 16px;
+            padding: 0;
+            color: #334155;
+        }
+
+        .proposal-benefits li {
+            margin-bottom: 3px;
+            line-height: 1.4;
+        }
+
+        .proposal-closing {
+            margin-top: 9px;
+            color: #334155;
+            line-height: 1.45;
+        }
+
+        .proposal-signoff {
+            margin-top: 10px;
+            color: #166534;
+            font-weight: 700;
+            line-height: 1.45;
+        }
+        /* ==========================================================
+           DETAILS TABLE
+        ========================================================== */
 
         .details-table {
             width: 100%;
@@ -135,22 +230,23 @@
         }
 
         .details-table td {
-            border: 1px solid #555;
-            padding: 6px 8px;
+            border: 1px solid #4b5563;
+            padding: 7px 8px;
             vertical-align: top;
-            line-height: 1.3;
+            line-height: 1.35;
+            background-color: #ffffff;
         }
 
         .details-table .label-cell {
             width: 27%;
-            font-weight: bold;
-            background: #eeeeee;
+            font-weight: 700;
+            color: #25351f;
+            background-color: #e7efd7;
         }
 
-
-        /* =========================================
-           SUMMARY
-        ========================================= */
+        /* ==========================================================
+           SUMMARY TABLE
+        ========================================================== */
 
         .summary-table {
             width: 100%;
@@ -159,25 +255,29 @@
         }
 
         .summary-table td {
-            border: 1px solid #555;
-            padding: 6px 8px;
+            border: 1px solid #4b5563;
+            padding: 7px 8px;
+            line-height: 1.25;
         }
 
         .summary-table td:first-child {
             width: 65%;
-            font-weight: bold;
-            background: #eeeeee;
+            font-weight: 700;
+            color: #25351f;
+            background-color: #e7efd7;
         }
 
         .summary-table td:last-child {
             width: 35%;
             text-align: right;
+            font-weight: 700;
+            color: #14532d;
+            background-color: #ffffff;
         }
 
-
-        /* =========================================
+        /* ==========================================================
            COMPONENT TABLE
-        ========================================= */
+        ========================================================== */
 
         .component-table {
             width: 100%;
@@ -187,20 +287,21 @@
         }
 
         .component-table th {
-            background: #333333;
-            color: #ffffff;
-            border: 1px solid #222222;
-            padding: 6px 5px;
+            background-color: #b7cf89;
+            color: #1f2937;
+            border: 1px solid #4b5563;
+            padding: 7px 5px;
             text-align: left;
-            font-weight: bold;
+            font-weight: 700;
         }
 
         .component-table td {
-            border: 1px solid #555555;
+            border: 1px solid #4b5563;
             padding: 6px 5px;
             vertical-align: top;
-            line-height: 1.25;
+            line-height: 1.28;
             word-wrap: break-word;
+            background-color: #ffffff;
         }
 
         .component-table th:nth-child(1),
@@ -228,10 +329,9 @@
             width: 16%;
         }
 
-
-        /* =========================================
+        /* ==========================================================
            COMMERCIAL TABLE
-        ========================================= */
+        ========================================================== */
 
         .commercial-table {
             width: 100%;
@@ -240,38 +340,43 @@
         }
 
         .commercial-table td {
-            border: 1px solid #555;
+            border: 1px solid #4b5563;
             padding: 7px 8px;
+            background-color: #ffffff;
         }
 
         .commercial-table td:first-child {
             width: 70%;
-            font-weight: bold;
-            background: #eeeeee;
+            font-weight: 700;
+            color: #25351f;
+            background-color: #e7efd7;
         }
 
         .commercial-table td:last-child {
             width: 30%;
             text-align: right;
-            font-weight: bold;
+            font-weight: 700;
+            color: #14532d;
+            background-color: #ffffff;
         }
 
         .grand-total td {
-            background: #dddddd !important;
+            background-color: #166534 !important;
+            color: #ffffff !important;
             font-size: 11px;
-            font-weight: bold !important;
+            font-weight: 800 !important;
+            border-color: #14532d !important;
         }
 
-
-        /* =========================================
-           PAGE 2
-        ========================================= */
+        /* ==========================================================
+           PAGE 2 HEADER
+        ========================================================== */
 
         .inner-page-header {
             width: 100%;
-            border-bottom: 1px solid #333;
-            padding-bottom: 7px;
-            margin-bottom: 14px;
+            padding: 0 0 7px 0;
+            margin-bottom: 13px;
+            border-bottom: 2px solid #8baa5e;
             font-size: 10px;
         }
 
@@ -283,20 +388,27 @@
         .inner-page-header-table td {
             border: none;
             padding: 0;
+            color: #14532d;
         }
 
         .inner-page-header-table td:last-child {
             text-align: right;
+            color: #1d4ed8;
+            letter-spacing: 0.55px;
         }
 
-
-        /* =========================================
-           INFORMATION BOX
-        ========================================= */
+        /* ==========================================================
+           NOTE BOX
+        ========================================================== */
 
         .note-box {
-            border: 1px solid #555;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #93c5a6;
+            border-left: 4px solid #166534;
             padding: 9px 10px;
+            background-color: #eef8f1;
+            color: #334155;
             line-height: 1.5;
         }
 
@@ -308,15 +420,14 @@
             margin-bottom: 0;
         }
 
-
-        /* =========================================
+        /* ==========================================================
            SIGNATURE
-        ========================================= */
+        ========================================================== */
 
         .signature-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 30px;
+            margin-top: 26px;
         }
 
         .signature-table td {
@@ -328,32 +439,35 @@
         }
 
         .signature-line {
-            border-top: 1px solid #333;
+            border-top: 1px solid #64748b;
             margin-bottom: 6px;
         }
 
         .signature-name {
-            font-weight: bold;
+            color: #14532d;
+            font-weight: 700;
             font-size: 9px;
         }
 
         .signature-company {
             font-size: 8px;
-            color: #555;
+            color: #64748b;
             margin-top: 3px;
         }
 
-
-        /* =========================================
+        /* ==========================================================
            FOOTER
-        ========================================= */
+        ========================================================== */
 
         .page-footer {
+            width: 100%;
+            box-sizing: border-box;
             margin-top: 20px;
-            border-top: 1px solid #888;
-            padding-top: 5px;
+            padding: 7px 8px;
+            border-top: 1px solid #8db4aa;
+            background-color: #e8f2ef;
             font-size: 7px;
-            color: #666;
+            color: #475569;
         }
 
         .footer-table {
@@ -366,873 +480,605 @@
             padding: 0;
         }
 
+        .footer-table td:first-child {
+            color: #14532d;
+            font-weight: 700;
+        }
+
         .footer-table td:last-child {
             text-align: right;
         }
 
-
-        /* =========================================
-           KEEP TABLE ROWS TOGETHER
-        ========================================= */
+        /* ==========================================================
+           PDF-SAFE TABLE BEHAVIOUR
+        ========================================================== */
 
         tr {
             page-break-inside: avoid;
         }
 
+
+        .summary-row-alt {
+            background-color: #f7faef !important;
+        }
+
     </style>
-
 </head>
-
-
 <body>
-
-
 <!-- ==================================================
      PAGE 1
 ================================================== -->
-
 <div class="quotation-page">
-
-
     <!-- HEADER -->
-
     <div class="company-header">
-
         <div class="company-name">
-            SHUL VENTURES
+            Solar Solutions
         </div>
-
         <div class="company-subtitle">
             Solar Energy Solutions
         </div>
-
         <div class="quotation-title">
             QUOTATION
         </div>
-
     </div>
-
-
     <!-- QUOTATION INFO -->
-
     <div class="quotation-info-box">
-
         <table class="info-table">
-
             <tr>
                 <td>
-                    <span class="info-label">
+<span class="info-label">
                         Quotation No:
                     </span>
-
                     <span th:text="${quotation.quotationNo}">
                         QT-001
                     </span>
-
                 </td>
-
                 <td>
-
-                    <span class="info-label">
+<span class="info-label">
                         Quotation Date:
                     </span>
-
                     <span th:text="${quotation.quotationDate}">
                         2026-08-27
                     </span>
-
                 </td>
-
             </tr>
-
         </table>
-
     </div>
 
+    <!-- PROPOSAL INTRODUCTION -->
 
-    <!-- CLIENT DETAILS -->
+    <div class="proposal-intro">
 
-    <div class="section">
+        <div class="proposal-meta">
 
-        <div class="section-title">
-            Client Details
+            <table class="proposal-meta-table">
+
+                <tr>
+                    <td class="proposal-meta-label">To</td>
+                    <td class="proposal-meta-value" th:text="${quotation.clientName}">
+                        Sumit
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="proposal-meta-label">Address</td>
+                    <td class="proposal-meta-value" th:text="${quotation.clientAddress}">
+                        Pune
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="proposal-meta-label">Phone</td>
+                    <td class="proposal-meta-value" th:text="${quotation.clientPhone}">
+                        7889455612
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="proposal-meta-label">Phase</td>
+                    <td class="proposal-meta-value" th:text="${quotation.phaseType}">
+                        Residential - Single Phase
+                    </td>
+                </tr>
+
+            </table>
+
         </div>
 
-        <table class="details-table">
+        <div class="proposal-subject">
+            Subject: <span th:text="${quotation.subject}">Quotation For 1KWp Solar PV System</span>
+        </div>
 
-            <tr>
+        <p class="proposal-greeting">
+            Dear Sir / Madam,
+        </p>
 
-                <td class="label-cell">
-                    Client Name
-                </td>
+        <p class="proposal-paragraph">
+            We are pleased to submit our quotation for a
+            <strong>
+                <span th:text="${quotation.pvPlantSize}">1.00</span> KWp
+            </strong>
+            <span th:text="${quotation.systemType}">On Grid</span>
+            Solar PV System. This proposal has been prepared based on the
+            project requirements and information provided by the client.
+        </p>
 
-                <td th:text="${quotation.clientName}">
-                    Sumit
-                </td>
+        <div class="proposal-benefits-title">Key Benefits</div>
 
-            </tr>
+        <ul class="proposal-benefits">
+            <li>Reduce electricity cost over the long term.</li>
+            <li>Best utilization of rooftop space.</li>
+            <li>Contribute to reducing pollution and carbon emissions.</li>
+        </ul>
 
-            <tr>
+        <p class="proposal-paragraph">
+            We have an experienced servicing team, well equipped and trained
+            for the operation, maintenance and upkeep of the solar system.
+        </p>
 
-                <td class="label-cell">
-                    Phone
-                </td>
+        <p class="proposal-closing">
+            We hope our proposal meets your expectations and we look forward
+            to hearing from you. Thanking you and assuring you of our best
+            and prompt services always.
+        </p>
 
-                <td th:text="${quotation.clientPhone}">
-                    7889455612
-                </td>
-
-            </tr>
-
-            <tr>
-
-                <td class="label-cell">
-                    Address
-                </td>
-
-                <td th:text="${quotation.clientAddress}">
-                    Pune
-                </td>
-
-            </tr>
-
-            <tr>
-
-                <td class="label-cell">
-                    Phase Type
-                </td>
-
-                <td th:text="${quotation.phaseType}">
-                    Residential - Single Phase
-                </td>
-
-            </tr>
-
-            <tr>
-
-                <td class="label-cell">
-                    Quotation Subject
-                </td>
-
-                <td th:text="${quotation.subject}">
-                    Quotation For 1KWp
-                </td>
-
-            </tr>
-
-        </table>
+        <div class="proposal-signoff">
+            Thanks &amp; Regards<br/>
+            Solar Solutions <br/>
+            Solar Energy Solutions
+        </div>
 
     </div>
 
-
     <!-- SUMMARY -->
-
     <div class="section">
-
         <div class="section-title">
             Summary of Proposal
         </div>
-
         <table class="summary-table">
-
             <tr>
-
                 <td>
                     Proposed PV Plant Size
                 </td>
-
                 <td>
-                    <span th:text="${quotation.pvPlantSize}">
+<span th:text="${quotation.pvPlantSize}">
                         1.00
                     </span>
                     KWp
                 </td>
-
             </tr>
-
             <tr>
-
-                <td>
+                <td class="summary-row-alt">
                     GST Included
                 </td>
-
-                <td th:text="${quotation.gstIncluded ? 'Yes' : 'No'}">
+                <td class="summary-row-alt" th:text="${quotation.gstIncluded ? 'Yes' : 'No'}">
                     No
                 </td>
-
             </tr>
-
             <tr>
-
                 <td>
                     System Type
                 </td>
-
                 <td th:text="${quotation.systemType}">
                     On Grid
                 </td>
-
             </tr>
-
             <tr>
-
-                <td>
+                <td class="summary-row-alt">
                     Power Generation / Month
                 </td>
-
-                <td>
-
-                    <span th:text="${quotation.powerGenerationMonth}">
+                <td class="summary-row-alt">
+<span th:text="${quotation.powerGenerationMonth}">
                         120.00
                     </span>
 
                     kWh
 
                 </td>
-
             </tr>
-
             <tr>
-
                 <td>
                     Power Generation / Year
                 </td>
-
                 <td>
-
-                    <span th:text="${quotation.powerGenerationYear}">
+<span th:text="${quotation.powerGenerationYear}">
                         1400.00
                     </span>
 
                     kWh
 
                 </td>
-
             </tr>
-
             <tr>
-
-                <td>
+                <td class="summary-row-alt">
                     Total System Cost
                 </td>
-
-                <td>
+                <td class="summary-row-alt">
 
                     ₹
                     <span th:text="${quotation.totalSystemCost}">
                         190000.00
                     </span>
-
                 </td>
-
             </tr>
-
             <tr>
-
                 <td>
                     Minimum Annual Saving
                 </td>
-
                 <td>
-
                     ₹
                     <span th:text="${quotation.minAnnualSaving}">
                         18720.00
                     </span>
-
                 </td>
-
             </tr>
-
             <tr>
-
-                <td>
+                <td class="summary-row-alt">
                     Investment Recovery
                 </td>
-
-                <td>
-
-                    <span th:text="${quotation.investmentRecoveryYears}">
+                <td class="summary-row-alt">
+<span th:text="${quotation.investmentRecoveryYears}">
                         10.00
                     </span>
-
                     Years
-
                 </td>
-
             </tr>
-
         </table>
-
     </div>
-
-
     <!-- COMPONENT DETAILS -->
-
     <div class="section">
-
         <div class="section-title">
             Component Details
         </div>
-
         <table class="component-table">
-
             <thead>
-
             <tr>
-
                 <th>
                     Item
                 </th>
-
                 <th>
                     Specifications
                 </th>
-
                 <th>
                     Make
                 </th>
-
                 <th>
                     Quantity
                 </th>
-
                 <th>
                     Standard
                 </th>
-
             </tr>
-
             </thead>
-
             <tbody>
-
             <tr th:each="item : ${quotation.items}">
-
                 <td th:text="${item.itemName}">
                     Solar Panels
                 </td>
-
                 <td th:text="${item.specification}">
                     DCR 545 - Watt Mono Crystalline PV Module
                 </td>
-
                 <td th:text="${item.make}">
                     Waree
                 </td>
-
                 <td th:text="${item.quantity}">
                     4
                 </td>
-
                 <td th:text="${item.standard}">
                     BIS
                 </td>
-
             </tr>
-
             </tbody>
-
         </table>
-
     </div>
-
-
     <!-- COMMERCIAL -->
-
     <div class="section">
-
         <div class="section-title">
             Commercial
         </div>
-
         <table class="commercial-table">
-
             <tr>
-
                 <td>
                     Supply / Installation
                 </td>
-
                 <td>
                     ₹
                     <span th:text="${quotation.supplyInstallation}">
                         190000.00
                     </span>
                 </td>
-
             </tr>
-
             <tr>
-
                 <td>
                     Commercial Total
                 </td>
-
                 <td>
                     ₹
                     <span th:text="${quotation.commercialTotal}">
                         190000.00
                     </span>
                 </td>
-
             </tr>
-
             <tr>
-
                 <td>
                     Actual Project Cost
                 </td>
-
                 <td>
                     ₹
                     <span th:text="${quotation.actualProjectCost}">
                         190000.00
                     </span>
                 </td>
-
             </tr>
-
             <tr>
-
                 <td>
                     GST @ 5%
                 </td>
-
                 <td>
                     ₹
                     <span th:text="${quotation.gstAmount}">
                         9500.00
                     </span>
                 </td>
-
             </tr>
-
             <tr>
-
                 <td>
                     Government Subsidy
                 </td>
-
                 <td>
                     ₹
                     <span th:text="${quotation.govtSubsidy}">
                         0.00
                     </span>
                 </td>
-
             </tr>
-
         </table>
-
-    </div>
-
-
-    <!-- FOOTER -->
-
-    <div class="page-footer">
-
-        <table class="footer-table">
-
-            <tr>
-
-                <td>
-                    SHUL VENTURES
-                </td>
-
-                <td>
-
-                    Quotation No:
-                    <span th:text="${quotation.quotationNo}">
-                        QT-001
-                    </span>
-
-                </td>
-
-            </tr>
-
-        </table>
-
     </div>
 
 </div>
-
-
 <!-- ==================================================
      PAGE 2
 ================================================== -->
-
-<div class="quotation-page page-break">
-
-
+<div class="quotation-page">
     <!-- PAGE HEADER -->
-
     <div class="inner-page-header">
-
         <table class="inner-page-header-table">
-
             <tr>
-
                 <td>
-                    <strong>SHUL VENTURES</strong>
+                    <strong>Solar Solutions</strong>
                 </td>
-
                 <td>
                     <strong>QUOTATION</strong>
                 </td>
-
             </tr>
-
         </table>
-
     </div>
-
-
     <!-- PROJECT DETAILS -->
-
     <div class="section">
-
         <div class="section-title">
             Project Details
         </div>
-
         <table class="details-table">
-
             <tr>
-
                 <td class="label-cell">
                     Client Name
                 </td>
-
                 <td th:text="${quotation.clientName}">
                     Sumit
                 </td>
-
             </tr>
-
             <tr>
-
                 <td class="label-cell">
                     System Type
                 </td>
-
                 <td th:text="${quotation.systemType}">
                     On Grid
                 </td>
-
             </tr>
-
             <tr>
-
                 <td class="label-cell">
                     PV Plant Size
                 </td>
-
                 <td>
-
-                    <span th:text="${quotation.pvPlantSize}">
+<span th:text="${quotation.pvPlantSize}">
                         1.00
                     </span>
 
                     KWp
 
                 </td>
-
             </tr>
-
             <tr>
-
                 <td class="label-cell">
                     Quotation Subject
                 </td>
-
                 <td th:text="${quotation.subject}">
                     Quotation For 1KWp
                 </td>
-
             </tr>
-
         </table>
-
     </div>
-
-
     <!-- COMPONENT DETAILS -->
-
     <div class="section">
-
         <div class="section-title">
             Component Details
         </div>
-
         <table class="component-table">
-
             <thead>
-
             <tr>
-
                 <th>
                     Item
                 </th>
-
                 <th>
                     Specifications
                 </th>
-
                 <th>
                     Make
                 </th>
-
                 <th>
                     Quantity
                 </th>
-
                 <th>
                     Standard
                 </th>
-
             </tr>
-
             </thead>
-
             <tbody>
-
             <tr th:each="item : ${quotation.items}">
-
                 <td th:text="${item.itemName}">
                     Solar Panels
                 </td>
-
                 <td th:text="${item.specification}">
                     Specification
                 </td>
-
                 <td th:text="${item.make}">
                     Make
                 </td>
-
                 <td th:text="${item.quantity}">
                     1
                 </td>
-
                 <td th:text="${item.standard}">
                     Standard
                 </td>
-
             </tr>
-
             </tbody>
-
         </table>
-
     </div>
-
-
     <!-- COMMERCIAL SUMMARY -->
-
     <div class="section">
-
         <div class="section-title">
             Commercial Summary
         </div>
-
         <table class="commercial-table">
-
             <tr>
-
                 <td>
                     Supply / Installation
                 </td>
-
                 <td>
                     ₹
                     <span th:text="${quotation.supplyInstallation}">
                         190000.00
                     </span>
                 </td>
-
             </tr>
-
             <tr>
-
                 <td>
                     Commercial Total
                 </td>
-
                 <td>
                     ₹
                     <span th:text="${quotation.commercialTotal}">
                         190000.00
                     </span>
                 </td>
-
             </tr>
-
             <tr>
-
                 <td>
                     Actual Project Cost
                 </td>
-
                 <td>
                     ₹
                     <span th:text="${quotation.actualProjectCost}">
                         190000.00
                     </span>
                 </td>
-
             </tr>
-
             <tr>
-
                 <td>
                     GST @ 5%
                 </td>
-
                 <td>
                     ₹
                     <span th:text="${quotation.gstAmount}">
                         9500.00
                     </span>
                 </td>
-
             </tr>
-
             <tr class="grand-total">
-
                 <td>
                     Final Project Cost
                 </td>
-
                 <td>
                     ₹
                     <span th:text="${quotation.actualProjectCost}">
                         190000.00
                     </span>
                 </td>
-
             </tr>
-
             <tr>
-
                 <td>
                     Government Subsidy
                 </td>
-
                 <td>
                     ₹
                     <span th:text="${quotation.govtSubsidy}">
                         0.00
                     </span>
                 </td>
-
             </tr>
-
         </table>
-
     </div>
-
-
     <!-- IMPORTANT INFORMATION -->
-
     <div class="section">
-
         <div class="section-title">
             Important Information
         </div>
-
         <div class="note-box">
-
             <p>
                 This quotation has been prepared based on the project
                 requirements and information provided by the client.
             </p>
-
             <p>
                 The final project cost may vary depending on actual
                 site conditions, material requirements and applicable
                 government policies.
             </p>
-
             <p>
                 The quotation is subject to the agreed commercial terms
                 between the client and SHUL VENTURES.
             </p>
-
         </div>
-
     </div>
-
-
     <!-- SIGNATURE -->
-
     <table class="signature-table">
-
         <tr>
-
             <td>
-
                 <div class="signature-line"></div>
-
                 <div class="signature-name">
                     Authorized Signatory
                 </div>
-
                 <div class="signature-company">
-                    SHUL VENTURES
+                    Solar Solutions
                 </div>
-
             </td>
-
             <td>
-
                 <div class="signature-line"></div>
-
                 <div class="signature-name">
                     Client Acceptance
                 </div>
-
-                <div class="signature-company"
-                     th:text="${quotation.clientName}">
+                <div class="signature-company" th:text="${quotation.clientName}">
                     Sumit
                 </div>
-
             </td>
-
         </tr>
-
     </table>
-
-
     <!-- FOOTER -->
-
     <div class="page-footer">
-
         <table class="footer-table">
-
             <tr>
-
                 <td>
-                    SHUL VENTURES
+                    Solar Solutions
                 </td>
-
                 <td>
 
                     Quotation No:
                     <span th:text="${quotation.quotationNo}">
                         QT-001
                     </span>
-
                 </td>
-
             </tr>
-
         </table>
-
     </div>
-
 </div>
-
 </body>
-
 </html>
