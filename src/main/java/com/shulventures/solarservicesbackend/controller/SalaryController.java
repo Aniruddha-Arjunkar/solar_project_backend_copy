@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.shulventures.solarservicesbackend.dto.EmployeeAdvanceSummaryResponse;
+
 import java.util.List;
 
 @RestController
@@ -22,18 +24,7 @@ public class SalaryController {
     }
 
 
-    //====================================================
-    // CREATE SALARY FOR EMPLOYEE
-    //====================================================
-
-    /*
-     * Example:
-     *
-     * POST
-     * /api/salaries/employee/1
-     *
-     * Employee ID = 1
-     */
+    //============ CREATE SALARY FOR EMPLOYEE =====================
 
     @PostMapping("/employee/{employeeId}")
     public ResponseEntity<Salary> createSalary(
@@ -51,16 +42,7 @@ public class SalaryController {
     }
 
 
-    //====================================================
-    // GET ALL SALARIES
-    //====================================================
-
-    /*
-     * Example:
-     *
-     * GET
-     * /api/salaries
-     */
+    //=================== GET ALL SALARIES ===============
 
     @GetMapping
     public ResponseEntity<List<Salary>> getAllSalaries() {
@@ -71,16 +53,7 @@ public class SalaryController {
     }
 
 
-    //====================================================
-    // GET ALL SALARIES OF AN EMPLOYEE
-    //====================================================
-
-    /*
-     * Example:
-     *
-     * GET
-     * /api/salaries/employee/1
-     */
+    //============= GET ALL SALARIES OF AN EMPLOYEE ====================
 
     @GetMapping("/employee/{employeeId}")
     public ResponseEntity<List<Salary>> getSalariesByEmployee(
@@ -93,9 +66,34 @@ public class SalaryController {
     }
 
 
-    //====================================================
-    // GET SALARY BY EMPLOYEE + MONTH
-    //====================================================
+    //=============== GET EMPLOYEE ADVANCE SUMMARY ============================
+
+    /*
+     * Example:
+     *
+     * GET
+     * /api/salaries/employee/1/advance-summary
+     *
+     * Returns:
+     *
+     * totalAdvanceTaken
+     * totalAdvanceDeducted
+     * pendingAdvance
+     */
+
+    @GetMapping("/employee/{employeeId}/advance-summary")
+    public ResponseEntity<EmployeeAdvanceSummaryResponse>
+    getEmployeeAdvanceSummary(@PathVariable Long employeeId) {
+
+        return ResponseEntity.ok(
+                salaryService.getEmployeeAdvanceSummary(
+                        employeeId
+                )
+        );
+    }
+
+
+    //================= GET SALARY BY EMPLOYEE + MONTH ===========================
 
     /*
      * Example:
@@ -125,16 +123,7 @@ public class SalaryController {
     }
 
 
-    //====================================================
-    // GET SALARY BY ID
-    //====================================================
-
-    /*
-     * Example:
-     *
-     * GET
-     * /api/salaries/10
-     */
+    //====== GET SALARY BY ID ==========================
 
     @GetMapping("/{id}")
     public ResponseEntity<Salary> getSalaryById(
@@ -150,17 +139,7 @@ public class SalaryController {
     }
 
 
-    //====================================================
-    // UPDATE SALARY
-    //====================================================
-
-    /*
-     * Example:
-     *
-     * PUT
-     * /api/salaries/10/employee/1
-     */
-
+    //==================== UPDATE SALARY ====================
     @PutMapping("/{id}/employee/{employeeId}")
     public ResponseEntity<Salary> updateSalary(
             @PathVariable Long id,
@@ -178,16 +157,7 @@ public class SalaryController {
     }
 
 
-    //====================================================
-    // DELETE SALARY
-    //====================================================
-
-    /*
-     * Example:
-     *
-     * DELETE
-     * /api/salaries/10
-     */
+    //============= DELETE SALARY ===================
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSalary(

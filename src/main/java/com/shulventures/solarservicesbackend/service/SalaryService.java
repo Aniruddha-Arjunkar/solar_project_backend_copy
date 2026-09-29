@@ -6,6 +6,8 @@ import com.shulventures.solarservicesbackend.repository.EmployeeRepository;
 import com.shulventures.solarservicesbackend.repository.SalaryRepository;
 import org.springframework.stereotype.Service;
 
+import com.shulventures.solarservicesbackend.dto.EmployeeAdvanceSummaryResponse;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -24,31 +26,62 @@ public class SalaryService {
         this.employeeRepository = employeeRepository;
     }
 
-    // CREATE SALARY
+    //============ CREATE SALARY =================
 
     public Salary createSalary(Long employeeId, Salary salary) {
 
-        // ============================================================
-        // FIND EMPLOYEE
-        // ============================================================
+        // ----------------- FIND EMPLOYEE -------------
 
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() ->
-                        new RuntimeException(
-                                "Employee not found with id: " + employeeId
-                        )
-                );
+                        new RuntimeException("Employee not found with id: " + employeeId));
 
-
-        // ============================================================
-        // SET EMPLOYEE
-        // ============================================================
-
+        // --------------- SET EMPLOYEE -------------
         salary.setEmployee(employee);
 
 
+        //---------------- PAYMENT TYPE -----------------
 
-        // CALCULATE FINAL SALARY
+        String paymentType = salary.getPaymentType();
+
+        if (paymentType == null || paymentType.isBlank()) {
+            salary.setPaymentType("SALARY");
+        } else {
+            salary.setPaymentType(
+                    paymentType.trim().toUpperCase()
+            );
+        }
+
+        // ------------------- VALIDATE ADVANCE DEDUCTION --------------
+
+        BigDecimal requestedAdvance =
+                salary.getAdvance() != null
+                        ? salary.getAdvance()
+                        : BigDecimal.ZERO;
+
+        if (requestedAdvance.compareTo(BigDecimal.ZERO) < 0) {
+            throw new RuntimeException("Advance amount cannot be negative.");
+        }
+
+
+        if ("SALARY".equalsIgnoreCase(salary.getPaymentType()) &&
+                        requestedAdvance.compareTo(BigDecimal.ZERO) > 0
+        ) {
+
+            EmployeeAdvanceSummaryResponse summary = getEmployeeAdvanceSummary(employeeId);
+
+            if (requestedAdvance.compareTo(summary.getPendingAdvance()) > 0) {
+                throw new RuntimeException(
+                        "Advance deduction of "
+                                + requestedAdvance
+                                + " cannot be greater than pending advance of "
+                                + summary.getPendingAdvance()
+                );
+            }
+        }
+
+
+        //--------------- CALCULATE FINAL SALARY ---------------
         BigDecimal netSalary =
                 salary.getAmount() != null
                         ? salary.getAmount()
@@ -76,18 +109,6 @@ public class SalaryService {
         return salaryRepository.save(salary);
     }
 
-//    public Salary createSalary(Long employeeId, Salary salary) {
-//        Employee employee = employeeRepository.findById(employeeId)
-//                .orElseThrow(() ->
-//                        new RuntimeException(
-//                                "Employee not found with id: " + employeeId
-//                        )
-//                );
-//        salary.setEmployee(employee);
-//        return salaryRepository.save(salary);
-//    }
-
-
     // GET ALL SALARIES
     public List<Salary> getAllSalaries() {
         return salaryRepository.findAll();
@@ -95,7 +116,6 @@ public class SalaryService {
 
 
     // GET SALARIES BY EMPLOYEE
-
     public List<Salary> getSalariesByEmployee(Long employeeId) {
         if (!employeeRepository.existsById(employeeId)) {
             throw new RuntimeException(
@@ -103,6 +123,88 @@ public class SalaryService {
             );
         }
         return salaryRepository.findByEmployeeId(employeeId);
+    }
+
+
+    // ================= GET EMPLOYEE ADVANCE SUMMARY ============================
+    public EmployeeAdvanceSummaryResponse
+    getEmployeeAdvanceSummary(Long employeeId) {
+
+        // ------------ VALIDATE EMPLOYEE ------------------
+
+        if (!employeeRepository.existsById(employeeId)) {
+            throw new RuntimeException("Employee not found with id: " + employeeId);
+        }
+
+        // -------- GET ALL SALARY / ADVANCE RECORDS ---------------------
+        List<Salary> salaries = salaryRepository.findByEmployeeId(employeeId);
+
+        // -------------- CALCULATE TOTAL ADVANCE TAKEN --------------------
+        BigDecimal totalAdvanceTaken =
+                salaries.stream()
+                        .filter(salary ->
+                                "ADVANCE".equalsIgnoreCase(
+                                        salary.getPaymentType()
+                                )
+                        )
+                        .map(salary ->
+                                salary.getAdvance() != null
+                                        ? salary.getAdvance()
+                                        : BigDecimal.ZERO)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+
+        // --------------- CALCULATE TOTAL ADVANCE DEDUCTED ---------------------
+
+        BigDecimal totalAdvanceDeducted =
+                salaries.stream()
+                        .filter(salary -> {
+
+                            String paymentType =
+                                    salary.getPaymentType();
+
+                            BigDecimal advance =
+                                    salary.getAdvance() != null
+                                            ? salary.getAdvance()
+                                            : BigDecimal.ZERO;
+
+
+                            return ("SALARY".equalsIgnoreCase(
+                                            paymentType)
+                                            &&
+                                            advance.compareTo(BigDecimal.ZERO) > 0
+                            );
+
+                        })
+                        .map(salary ->
+                                salary.getAdvance() != null
+                                        ? salary.getAdvance()
+                                        : BigDecimal.ZERO
+                        )
+                        .reduce(
+                                BigDecimal.ZERO,
+                                BigDecimal::add
+                        );
+
+
+        // ------------- CALCULATE PENDING ADVANCE ------------------------
+        BigDecimal pendingAdvance = totalAdvanceTaken.subtract(totalAdvanceDeducted);
+
+
+        // ------------ NEVER RETURN NEGATIVE BALANCE -------------------
+
+        if (pendingAdvance.compareTo(BigDecimal.ZERO) < 0) {
+            pendingAdvance = BigDecimal.ZERO;
+        }
+
+        // -------- RETURN SUMMARY --------------------------
+
+        return new EmployeeAdvanceSummaryResponse(
+                employeeId,
+                totalAdvanceTaken,
+                totalAdvanceDeducted,
+                pendingAdvance
+        );
     }
 
 
